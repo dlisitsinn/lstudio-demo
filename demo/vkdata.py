@@ -183,7 +183,9 @@ def download(url: str, dest: Path, opener=None) -> bool:
 
 def read_token(base: Path) -> str:
     """Токен из своего .env, а если там пусто — из .env основного бота (папка lstudio-bot рядом)."""
-    for env in (base / ".env", base.parent / "lstudio-bot" / ".env", base.parent / "lstudio-bot-main" / ".env"):
+    near = sorted(p for p in base.parent.glob("*/.env")
+                  if p.parent != base and "lstudio" in p.parent.name.lower() or "бот" in p.parent.name.lower())
+    for env in [base / ".env", base.parent / "lstudio-bot" / ".env", base.parent / "lstudio-bot-main" / ".env"] + near:
         if env.exists():
             for line in env.read_text(encoding="utf-8", errors="ignore").splitlines():
                 if line.strip().startswith("VK_USER_TOKEN="):
