@@ -33,7 +33,7 @@ def screen_from_url(url: str) -> str:
 class Client:
     def __init__(self, token: str, opener=None):
         if not token:
-            raise VKError("Нет токена ВК. Впишите VK_USER_TOKEN в файл .env (тот же, что у основного бота)")
+            raise VKError("ВК не подключён — нажмите «Подключить ВК через Chrome»")
         self.token = token
         self.opener = opener or urllib.request.urlopen
 
@@ -48,6 +48,8 @@ class Client:
             raise VKError(f"Нет связи с ВК: {exc}")
         if "error" in payload:
             e = payload["error"]
+            if e.get("error_code") == 5:
+                raise VKError("Доступ к ВК устарел — нажмите «Подключить ВК через Chrome» ещё раз")
             raise VKError(f"ВК: {e.get('error_msg')} (код {e.get('error_code')})")
         return payload["response"]
 

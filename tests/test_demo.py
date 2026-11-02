@@ -208,3 +208,20 @@ def test_updater_never_touches_user_data():
     for p in (".env", "data/uploads/a.jpg", "sites/x/index.html"):
         assert updater.is_protected(p)
     assert not updater.is_protected("demo/apply.js")
+
+
+def test_vk_connect_catches_token(tmp_path):
+    pytest.importorskip("playwright.sync_api")
+    from demo import vkauth
+    (tmp_path / ".env").write_text("# настройки\nVK_USER_TOKEN=\nAUTO_UPDATE=да\n", encoding="utf-8")
+    page = tmp_path / "auth.html"
+    page.write_text("<script>setTimeout(()=>location.href='blank.html#access_token=vk1.a.TEST&expires_in=0',300)</script>")
+    (tmp_path / "blank.html").write_text("ok")
+    try:
+        token = vkauth.connect(tmp_path, log=lambda m: None, timeout=20, headless=True, url=page.as_uri())
+    except RuntimeError as exc:
+        pytest.skip(f"браузер недоступен: {exc}")
+    assert token == "vk1.a.TEST"
+    env = (tmp_path / ".env").read_text(encoding="utf-8")
+    assert "VK_USER_TOKEN=vk1.a.TEST" in env and "AUTO_UPDATE=да" in env
+    assert vkdata.read_token(tmp_path) == "vk1.a.TEST"

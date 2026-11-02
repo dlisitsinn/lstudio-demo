@@ -15,7 +15,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
-from . import builder, shots, vkdata
+from . import builder, shots, vkauth, vkdata
 
 STATIC = Path(__file__).resolve().parent / "static"
 IMG_EXT = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"}
@@ -81,6 +81,17 @@ class App:
         f = data["fields"]
         guess = builder.guess_template(" ".join([f["name"], data.get("activity", ""), f["tagline"], f["about"][:400]]))
         return {"fields": f, "items": items, "photos": photos, "template": guess, "notes": data["notes"]}
+
+    def vk_connected(self) -> bool:
+        return bool(vkdata.read_token(self.base))
+
+    def vk_connect(self) -> dict:
+        self.status = "Открываю Chrome…"
+        try:
+            vkauth.connect(self.base, log=lambda m: setattr(self, "status", m))
+        finally:
+            self.status = ""
+        return {"ok": True}
 
     # ---------- сборка ----------
     def build(self, req: dict) -> dict:
@@ -183,6 +194,8 @@ def make_handler(app: App):
                 return self._json(builder.history())
             if path == "/api/status":
                 return self._json({"status": app.status, "busy": app.build_lock.locked()})
+            if path == "/api/vk_state":
+                return self._json({"connected": app.vk_connected()})
             if path == "/api/job":
                 return self._json({"job": app.new_job()})
             return self._send(404, b"not found", "text/plain")
@@ -196,6 +209,8 @@ def make_handler(app: App):
                 data = json.loads(self.rfile.read(n) or b"{}")
                 if path == "/api/upload":
                     res = app.upload(data.get("job"), data.get("name"), data.get("data"))
+                elif path == "/api/vk_connect":
+                    res = app.vk_connect()
                 elif path == "/api/vk":
                     res = app.from_vk(data.get("url"), data.get("job"))
                 elif path == "/api/parse":
