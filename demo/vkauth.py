@@ -9,9 +9,11 @@ from pathlib import Path
 
 from . import shots
 
-OAUTH_URL = ("https://oauth.vk.com/authorize?client_id=2685278&display=page"
-             "&redirect_uri=https://oauth.vk.com/blank.html&scope=groups,photos,market,offline"
-             "&response_type=token&v=5.199")
+_AUTH = ("https://oauth.vk.ru/authorize?client_id=2685278&display=page"
+         "&redirect_uri=https://oauth.vk.ru/blank.html&scope={scope}&response_type=token&v=5.199")
+# от больших прав к меньшим: если ВК отвечает «Access denied», пробуем следующий вариант
+SCOPES = ("groups,photos,offline", "groups,offline")
+OAUTH_URL = _AUTH.format(scope=SCOPES[0])
 TOKEN_RE = re.compile(r"access_token=([^&#\s]+)")
 
 
@@ -51,9 +53,20 @@ def connect(base: Path, log=print, timeout=300, headless=False, url=OAUTH_URL) -
         try:
             page = ctx.pages[0] if ctx.pages else ctx.new_page()
             log("Войдите во ВК в открывшемся окне и нажмите «Разрешить»")
-            page.goto(url, wait_until="domcontentloaded")
+            urls = [url] if url != OAUTH_URL else [_AUTH.format(scope=sc) for sc in SCOPES]
+            step = 0
+            page.goto(urls[0], wait_until="domcontentloaded")
             end = time.time() + timeout
             while time.time() < end:
+                try:
+                    denied = "Access denied" in (page.content() or "")
+                except Exception:
+                    denied = False
+                if denied and step + 1 < len(urls):
+                    step += 1
+                    log("ВК не дал часть прав — пробую попроще, нажмите «Разрешить» ещё раз")
+                    page.goto(urls[step], wait_until="domcontentloaded")
+                    continue
                 for p in ctx.pages:
                     m = TOKEN_RE.search(p.url or "")
                     if m:
