@@ -106,6 +106,7 @@ table.items input{padding:7px 8px;font-size:14px}
             <input type="url" id="vkUrl" placeholder="https://vk.com/salon_roza" style="flex:1;min-width:220px">
             <button class="btn primary" id="vkBtn">Подтянуть из ВК</button>
           </div>
+          <div class="row" style="margin-top:10px"><button class="btn small" id="vkConnBtn2">Подключить ВК через Chrome</button><span class="hint" id="vkStateTxt"></span></div>
           <p class="hint" style="margin:8px 0 0">Бот возьмёт название, описание, телефон, адрес, товары с ценами и фото. Всё можно поправить ниже.</p>
           <div id="vkConnect" class="msg warn" style="display:none">ВК ещё не подключён. Нажмите кнопку — откроется окно Chrome: войдите во ВК (один раз) и нажмите «Разрешить».
             <div style="margin-top:8px"><button class="btn primary small" id="vkConnBtn">Подключить ВК через Chrome</button></div></div>
@@ -305,7 +306,9 @@ $("#pasteOk").onclick = async () => {
 async function vkState(){
   const s = await api("/api/vk_state").catch(() => ({connected:true}));
   $("#vkConnect").style.display = s.connected ? "none" : "block";
+  $("#vkStateTxt").textContent = s.connected ? "ВК подключён" : "ВК не подключён";
 }
+$("#vkConnBtn2").onclick = () => $("#vkConnBtn").click();
 $("#vkConnBtn").onclick = async () => {
   const b = $("#vkConnBtn"); b.disabled = true; b.textContent = "Жду, пока нажмёте «Разрешить» в окне Chrome…";
   try { await api("/api/vk_connect", {}); msg("#vkMsg", "ВК подключён. Теперь вставьте ссылку и нажмите «Подтянуть из ВК».", "ok"); }
