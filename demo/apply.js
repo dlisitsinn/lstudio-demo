@@ -309,6 +309,10 @@
           if (op.list) applyList(Object.assign({}, op, {item: op.list}), null, null);
           if (op.group) applyGroups(op);
           if (op.gallery) applyGallery(op.gallery);
+          if (op.js) {                     // свой код шаблона (например, меню с вкладками)
+            try { new Function("D", "V", "esc", "fmt", op.js)(D, V, esc, fmt); }
+            catch (e) { console.warn("[demo] js шаблона", e); }
+          }
           if (op.dispatch) qsa(op.dispatch).forEach(function (el) { el.dispatchEvent(new Event(op.event || "scroll")); });
         } catch (e) { console.warn("[demo] шаг не выполнен", op, e); }
       });

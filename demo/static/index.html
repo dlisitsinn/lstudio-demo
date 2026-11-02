@@ -106,6 +106,7 @@ table.items input{padding:7px 8px;font-size:14px}
             <input type="url" id="vkUrl" placeholder="https://vk.com/salon_roza" style="flex:1;min-width:220px">
             <button class="btn primary" id="vkBtn">Подтянуть из ВК</button>
           </div>
+          <input type="url" id="vkMenu" placeholder="Ссылка на меню или товары в ВК (необязательно)" style="margin-top:8px">
           <div class="row" style="margin-top:10px"><button class="btn small" id="vkConnBtn2">Войти во ВК через Chrome</button><span class="hint" id="vkStateTxt"></span></div>
           <p class="hint" style="margin:8px 0 0">Бот возьмёт название, описание, телефон, адрес, товары с ценами и фото. Всё можно поправить ниже.</p>
           <div id="vkConnect" class="msg warn" style="display:none">Чтобы бот читал группы, один раз войдите во ВК: нажмите кнопку — откроется окно Chrome, войдите как обычно, окно закроется само.
@@ -323,7 +324,7 @@ $("#vkBtn").onclick = async () => {
   $("#vkBtn").disabled = true;
   try {
     await ensureJob();
-    const r = await api("/api/vk", {url, job});
+    const r = await api("/api/vk", {url, job, menu_url: $("#vkMenu").value.trim()});
     FIELDS.forEach(k => { if (r.fields[k]) $("#f_"+k).value = r.fields[k]; });
     if (r.photos.length) photos = r.photos.concat(photos.filter(p => !r.photos.includes(p)));
     if (r.items.length) items = r.items;

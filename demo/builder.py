@@ -185,6 +185,7 @@ def make_vars(f: dict, tpl: dict) -> dict:
         "name_rest": " ".join(words[1:]),
         "NAME_FIRST": words[0].upper(),
         "NAME_REST": " ".join(words[1:]).upper(),
+        "letter": next((c for c in name if c.isalnum()), "·").upper(),
         "tagline": (f.get("tagline") or "").strip(),
         "city": city,
         "address": (f.get("address") or "").strip(),
@@ -206,6 +207,7 @@ def make_vars(f: dict, tpl: dict) -> dict:
     v["phone_wa"] = v["phone_href"].lstrip("+")
     if not v["address"] and city:
         v["address"] = city
+    v["vk_short"] = re.sub(r"^https?://(www\.)?", "", v["vk"]).rstrip("/")
     v["city_or_address"] = v["city"] or v["address"]
     full = v["address"] if (not city or city.lower() in v["address"].lower()) else f"{city}, {v['address']}"
     v["address_full"] = full

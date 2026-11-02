@@ -1,0 +1,234 @@
+{
+ "title_ui": "Кафе и ресторан (Пион)",
+ "order": 4,
+ "repo": "dlisitsinn/pion",
+ "keywords": [
+  "кафе",
+  "ресторан",
+  "бистро",
+  "необистро",
+  "кухн",
+  "пицц",
+  "суши",
+  "роллы",
+  "кофейн",
+  "кофе",
+  "бар",
+  "пекарн",
+  "бургер",
+  "шашлык",
+  "гриль",
+  "паб",
+  "доставка еды",
+  "завтрак",
+  "taste",
+  "cafe",
+  "food"
+ ],
+ "title": "{name} — {tagline}",
+ "default_cat": "Меню",
+ "defaults": {
+  "tagline": "кафе · {city}",
+  "kind": "кафе",
+  "about1": "«{name}» — место, куда хочется возвращаться: вкусная кухня, уютный зал и внимательный сервис.",
+  "phone": "+7 (900) 000-00-00",
+  "hours": "ежедневно 10:00 — 22:00",
+  "city": "Ваш город"
+ },
+ "slots": [
+  "hero",
+  "s2",
+  "s3",
+  "about",
+  "about2",
+  "banq"
+ ],
+ "before_shot": [
+  {
+   "click": "#preloader",
+   "wait": 1500
+  }
+ ],
+ "shot_css": "#preloader{display:none!important}",
+ "ops": [
+  {
+   "id": "pion",
+   "css": "#promoModal{display:none!important}.dish__img--empty{display:none}"
+  },
+  {
+   "replace": {
+    "ПИОН": "{NAME}",
+    "Пиона": "{name}",
+    "Пионе": "{name}",
+    "Пион": "{name}",
+    "ул. Светлая, 12с1": "{address}",
+    "+7 (495) 123-45-67": "{phone}"
+   }
+  },
+  {
+   "remove": "#news, #loyalty, #delivery, #promoModal, a[href='#news'], a[href='#loyalty'], a[href='#delivery'], .menu__books, .about__stats, a[href^='mailto:']"
+  },
+  {
+   "html": ".header__mark",
+   "value": "<circle cx=\"24\" cy=\"24\" r=\"21\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\"/><text x=\"24\" y=\"31\" text-anchor=\"middle\" font-size=\"21\" font-family=\"Georgia,serif\" fill=\"currentColor\">{letter}</text>"
+  },
+  {
+   "text": ".header__name",
+   "value": "{NAME}"
+  },
+  {
+   "text": ".header__sub",
+   "value": "{kind}"
+  },
+  {
+   "text": ".header__addr",
+   "value": "{address}"
+  },
+  {
+   "text": "#welcomeLine",
+   "value": "Добро пожаловать в"
+  },
+  {
+   "text": "#welcomeLogo",
+   "value": "{NAME}"
+  },
+  {
+   "text": "a[href^='tel:']",
+   "value": "{phone}",
+   "all": true
+  },
+  {
+   "tel": true
+  },
+  {
+   "attr": "a[href*='vk.com/qwlisin']",
+   "name": "href",
+   "value": "{vk}",
+   "all": true,
+   "empty": "keep"
+  },
+  {
+   "text": ".hero__kicker",
+   "value": "{tagline}"
+  },
+  {
+   "html": ".hero__title",
+   "value": "Добро пожаловать<br>в «{name}»"
+  },
+  {
+   "text": ".hero__text",
+   "value": "{about1}"
+  },
+  {
+   "img": ".hero__slide:nth-child(1)",
+   "slot": "hero"
+  },
+  {
+   "img": ".hero__slide:nth-child(2)",
+   "slot": "s2"
+  },
+  {
+   "img": ".hero__slide:nth-child(3)",
+   "slot": "s3"
+  },
+  {
+   "img": ".hero__slide:nth-child(4)",
+   "slot": "hero"
+  },
+  {
+   "img": ".hero__slide:nth-child(5)",
+   "slot": "s2"
+  },
+  {
+   "text": ".about__lead",
+   "value": "{about1}"
+  },
+  {
+   "text": ".about__text p:nth-of-type(2)",
+   "value": "{about2}",
+   "empty": "remove"
+  },
+  {
+   "text": ".about__text p:nth-of-type(3)",
+   "value": "{about3}",
+   "empty": "remove"
+  },
+  {
+   "img": ".about__photo--big img",
+   "slot": "about"
+  },
+  {
+   "img": ".about__photo:not(.about__photo--big) img",
+   "slot": "about2"
+  },
+  {
+   "when": "items",
+   "js": "var grid=document.getElementById('menuGrid'),tabs=document.getElementById('menuTabs');if(!grid||!tabs||tabs.getAttribute('data-demo'))return;tabs.setAttribute('data-demo','1');var G=D.gallery||[];function render(ci){grid.innerHTML='';D.cats[ci].items.forEach(function(d,i){var ph=d.photo||(G.length?G[i%G.length]:'');var c=document.createElement('article');c.className='dish';c.style.setProperty('--i',i);c.innerHTML=(ph?'<div class=\"dish__img\"><img src=\"'+esc(ph)+'\" alt=\"'+esc(d.title)+'\"></div>':'')+'<div class=\"dish__body\"><h5 class=\"dish__name\">'+esc(d.title)+'</h5>'+(d.desc?'<p class=\"dish__desc\">'+esc(d.desc)+'</p>':'')+(d.price?'<div class=\"dish__price\">'+esc(d.price)+'</div>':'')+'</div>';grid.appendChild(c);});}tabs.innerHTML='';D.cats.forEach(function(c,i){var b=document.createElement('button');b.className='menu__tab'+(i?'':' is-active');b.type='button';b.textContent=c.name;b.onclick=function(){[].forEach.call(tabs.children,function(t){t.classList.remove('is-active')});b.classList.add('is-active');render(i);};tabs.appendChild(b);});render(0);"
+  },
+  {
+   "img": ".banquets__photo img",
+   "slot": "banq"
+  },
+  {
+   "html": ".banquets__list",
+   "value": "<li>Дни рождения, юбилеи, свадьбы и корпоративы</li><li>Банкетное меню под ваш вкус и бюджет</li><li>Поможем с оформлением зала</li>"
+  },
+  {
+   "html": ".contacts__item:nth-child(1) p",
+   "value": "{address_full}"
+  },
+  {
+   "html": ".contacts__item:nth-child(2) p",
+   "value": "<a href=\"tel:{phone_href}\">{phone}</a>"
+  },
+  {
+   "html": ".contacts__item:nth-child(3) p",
+   "value": "{hours}"
+  },
+  {
+   "when": "vk",
+   "html": ".contacts__item:nth-child(4) p",
+   "value": "<a class=\"contacts__vk\" href=\"{vk}\" target=\"_blank\">{vk_short}</a>"
+  },
+  {
+   "when": "!vk",
+   "remove": ".contacts__item:nth-child(4), .header__vk, .nav-overlay__vk"
+  },
+  {
+   "attr": ".contacts__cta a.btn--ghost",
+   "name": "href",
+   "value": "https://yandex.ru/maps/?text={address_q}"
+  },
+  {
+   "text": ".footer__logo",
+   "value": "{NAME}"
+  },
+  {
+   "text": ".footer__note",
+   "value": "{kind} · {address_full} · {phone}"
+  },
+  {
+   "js": "var n=0;document.querySelectorAll('.section__num').forEach(function(e){n++;e.textContent=(n<10?'0':'')+n;});"
+  },
+  {
+   "gallery": {
+    "after": "#about",
+    "title": "Наш зал и блюда",
+    "min": 8
+   },
+   "css": "#demo-gallery .dg-title{font-weight:400}"
+  },
+  {
+   "fit": "#welcomeLogo",
+   "ratio": 0.9,
+   "nowrap": true
+  },
+  {
+   "fit": ".header__name",
+   "maxw": 320,
+   "ratio": 0.4,
+   "nowrap": true,
+   "min": 14
+  }
+ ]
+}

@@ -62,7 +62,8 @@ def test_guess_template():
     assert builder.guess_template("Студия маникюра Роза") == "beauty"
     assert builder.guess_template("Детейлинг центр, полировка") == "auto"
     assert builder.guess_template("Ремонт квартир под ключ") == "repair"
-    assert builder.guess_template("Кафе Уют, банкеты") == "cafe"
+    assert builder.guess_template("Столовая, комплексные обеды") == "cafe"
+    assert builder.guess_template("Will Taste необистро, кафе") == "restaurant"
     assert builder.guess_template("Букеты и цветы с доставкой") == "flowers"
 
 
@@ -215,7 +216,7 @@ def test_server_vk_falls_back_to_browser(tmp_dirs, monkeypatch):
     monkeypatch.setattr(vkdata, "download", lambda u, dest, opener=None: dest.write_bytes(PNG) or True)
     monkeypatch.setattr(vkdata, "read_token", lambda base: "")
     app = server.App()
-    app._page_fetch = lambda url, base, log=print: {
+    app._page_fetch = lambda url, base, log=print, menu_url="": {
         "fields": {"name": "Цветы Флора", "tagline": "", "about": "", "city": "", "vk": url, "phone": "",
                    "address": "", "hours": ""},
         "items": [{"title": "Букет", "price": "3 500 ₽", "desc": "", "cat": "", "photo_url": "https://x/1.jpg"}],
@@ -226,7 +227,8 @@ def test_server_vk_falls_back_to_browser(tmp_dirs, monkeypatch):
 
 def test_vkpage_parse_and_photos():
     from demo import vkpage
-    f = vkpage.parse_info({"title": "Will Taste | ВКонтакте", "desc": "Кафе необистро",
+    assert vkpage.pick_name({"names": ["ВКонтакте", "Will Taste | ВКонтакте"]}) == "Will Taste"
+    f = vkpage.parse_info({"names": ["ВКонтакте", "Will Taste"], "desc": "Кафе необистро",
                            "text": "Will Taste\nПодписаться\nг. Карталы, ул. Ленина, 14\nПн–Вс 10:00–22:00\n+7 (912) 000-11-22"})
     assert f["name"] == "Will Taste" and f["about"] == "Кафе необистро"
     assert f["address"] == "г. Карталы, ул. Ленина, 14" and f["hours"] == "Пн–Вс 10:00–22:00"
@@ -247,6 +249,7 @@ def test_vkpage_market_js_on_fake_page(tmp_path):
         <div><span>Букет из 15 роз</span><span>3 500 ₽</span></div></div>
       <div class="card"><div><img src="https://sun9.userapi.com/p2.jpg?size=600x600"></div>
         <div><span>Тюльпаны</span><span>от 2 900 ₽</span></div></div>
+      <ul><li>Борщ со сметаной — 350 ₽</li><li>Морс 120 ₽</li></ul>
     </body></html>''', encoding="utf-8")
     try:
         with pw.sync_playwright() as p:
@@ -258,5 +261,6 @@ def test_vkpage_market_js_on_fake_page(tmp_path):
             b.close()
     except Exception as exc:
         pytest.skip(f"браузер недоступен: {exc}")
-    assert [(i["title"], i["price"]) for i in items] == [("Букет из 15 роз", "3 500 ₽"), ("Тюльпаны", "от 2 900 ₽")]
+    assert [(i["title"], i["price"]) for i in items] == [("Букет из 15 роз", "3 500 ₽"), ("Тюльпаны", "от 2 900 ₽"),
+                                                         ("Борщ со сметаной", "350 ₽"), ("Морс", "120 ₽")]
     assert items[0]["photo"].endswith("p1.jpg?size=600x600") and len(imgs) == 2

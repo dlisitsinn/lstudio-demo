@@ -16,14 +16,21 @@ ADDR_RE = re.compile(r"(ул\.|улица|просп|пр-т|пр\.|пер\.|п�
 
 JS_INFO = r"""() => {
   const meta = n => (document.querySelector(`meta[property="${n}"]`) || document.querySelector(`meta[name="${n}"]`) || {}).content || "";
-  const h1 = document.querySelector("h1");
+  const names = [];
+  const push = t => { t = (t || "").replace(/\s+/g, " ").trim(); if (t) names.push(t); };
+  push(meta("og:title"));
+  document.querySelectorAll('[class*="page_name"], [class*="GroupName"], [class*="group-name"], [class*="groupName"], [class*="ProfileName"], [data-testid*="name"], h1, h2')
+    .forEach(e => { if (e.offsetParent !== null || e.tagName === "H1") push(e.textContent); });
+  push(document.title);
+  const links = [...document.querySelectorAll("a[href]")].map(a => a.getAttribute("href"))
+    .filter(h => /market|uslugi|services|product|menu|catalog/i.test(h || ""));
   return {
-    title: meta("og:title") || (h1 ? h1.textContent : "") || document.title,
-    h1: h1 ? h1.textContent.trim() : "",
+    names: names.slice(0, 30),
     desc: meta("og:description") || meta("description"),
     image: meta("og:image"),
     text: (document.body.innerText || "").slice(0, 30000),
-    html: document.documentElement.innerHTML.slice(0, 400000)
+    html: document.documentElement.innerHTML.slice(0, 400000),
+    links: links.slice(0, 40)
   };
 }"""
 
@@ -46,25 +53,43 @@ JS_IMGS = r"""() => {
 }"""
 
 JS_MARKET = r"""() => {
-  const priceRe = /^\s*(от\s*)?\d[\d\s  .,]*\s*(₽|руб\.?|р\.)\s*$/i;
-  const leaves = [...document.querySelectorAll("body *")].filter(e => e.children.length === 0 && priceRe.test(e.textContent || ""));
-  const seen = new Set(), items = [];
+  const priceRe = /^\s*(от\s*)?\d[\d\s\u00a0\u202f.,]*\s*(₽|руб\.?|р\.)\s*$/i;
+  const tailRe = /^(.{3,}?)\s+(?:—\s*|-\s*)?((?:от\s*)?\d[\d\s\u00a0\u202f]*\s*(?:₽|руб\.?|р\.))\s*$/i;
+  const leaves = [...document.querySelectorAll("body *")].filter(e => e.children.length === 0)
+    .filter(e => { const t = (e.textContent || "").trim(); return t.length < 160 && (priceRe.test(t) || tailRe.test(t)); });
+  const seen = new Set(), items = [], clean = t => (t || "").replace(/[\s\u00a0\u202f]+/g, " ").trim();
   for (const pe of leaves) {
-    let card = pe;
-    for (let k = 0; k < 7 && card; k++) { card = card.parentElement; if (card && card.querySelector("img")) break; }
-    if (!card || seen.has(card)) continue;
+    let card = null, up = pe;
+    for (let k = 0; k < 8 && up && up !== document.body; k++) { up = up.parentElement; if (up && up !== document.body && up.querySelector("img")) { card = up; break; } }
+    if (!card || seen.has(card)) card = pe;          // карточки с фото нет — позиция строкой
+    if (seen.has(card)) continue;
     seen.add(card);
-    const texts = [...card.querySelectorAll("*")].filter(e => e.children.length === 0)
-      .map(e => (e.textContent || "").trim()).filter(t => t.length > 2 && !priceRe.test(t));
+    const own = clean(pe.textContent), m = own.match(tailRe);
+    let title = "", price = own;
+    if (m && !priceRe.test(own)) { title = m[1]; price = m[2]; }
+    if (!title) {
+      const texts = [...card.querySelectorAll("*")].filter(e => e.children.length === 0)
+        .map(e => clean(e.textContent)).filter(t => t.length > 2 && !priceRe.test(t) && !/^(в корзину|купить|подробнее|написать)$/i.test(t));
+      title = texts[0] || "";
+    }
     const img = card.querySelector("img");
     let photo = img ? (img.currentSrc || img.src) : "";
     if (img && img.srcset) { let bw = 0; img.srcset.split(",").forEach(p => { const [u, w] = p.trim().split(/\s+/); const n = parseInt(w) || 0; if (n > bw) { bw = n; photo = u; } }); }
-    items.push({title: texts[0] || "", price: (pe.textContent || "").replace(/[\s  ]+/g, " ").trim(), photo});
+    if (title) items.push({title, price: clean(price), photo});
   }
-  return items.filter(i => i.title).slice(0, 40);
+  return items.slice(0, 120);
 }"""
 
-JS_SCROLL = """async (n) => { for (let i = 0; i < n; i++) { scrollBy(0, innerHeight); await new Promise(r => setTimeout(r, 450)); } }"""
+JS_SCROLL = """async (n) => {
+  let last = 0, same = 0;
+  for (let i = 0; i < n; i++) {
+    scrollTo(0, document.documentElement.scrollHeight);
+    await new Promise(r => setTimeout(r, 700));
+    const h = document.documentElement.scrollHeight;
+    if (h === last) { if (++same >= 3) break; } else same = 0;
+    last = h;
+  }
+}"""
 
 
 def _logged_in(ctx) -> bool:
@@ -163,9 +188,22 @@ def _clean_photos(pairs, limit):
     return out
 
 
+GENERIC = {"вконтакте", "vk", "вк", "vk.com", "vk.ru", "сообщество", "группа", "мессенджер", "новости", "главная",
+           "товары", "услуги", "меню", "фотографии", "фото", "видео", "клипы", "сообщения", "подписаться"}
+
+
+def pick_name(info: dict) -> str:
+    for n in info.get("names") or [info.get("h1", ""), info.get("title", "")]:
+        n = re.sub(r"\s*[|—–-]\s*(ВКонтакте|VK|ВК)\s*$", "", (n or "").strip())
+        n = re.sub(r"^(ВКонтакте|VK)\s*[|—–-]\s*", "", n)
+        if n and n.lower() not in GENERIC and len(n) <= 80:
+            return n
+    return ""
+
+
 def parse_info(info: dict) -> dict:
     """Текст страницы группы → поля формы."""
-    title = re.sub(r"\s*[|—-]\s*(ВКонтакте|VK|ВК)\s*$", "", (info.get("h1") or info.get("title") or "").strip())
+    title = pick_name(info)
     text = info.get("text") or ""
     lines = [l.strip() for l in text.splitlines() if l.strip()]
     phone = ""
@@ -187,7 +225,10 @@ def parse_info(info: dict) -> dict:
             "city": "", "vk": ""}
 
 
-def fetch(url: str, base: Path, log=print, photo_limit=24) -> dict:
+def fetch(url: str, base: Path, log=print, photo_limit=24, menu_url: str = "") -> dict:
+    if not menu_url and re.search(r"/(market|uslugi|services|product)", url or ""):
+        menu_url, gm = url, re.search(r"-(\d+)", url)      # дали ссылку прямо на товары
+        url = f"vk.com/club{gm.group(1)}" if gm else url
     screen = screen_from_url(url)
     shots.ensure_playwright(log)
     from playwright.sync_api import sync_playwright
@@ -211,7 +252,7 @@ def fetch(url: str, base: Path, log=print, photo_limit=24) -> dict:
                 raise VKError("ВК просит войти заново — нажмите «Войти во ВК через Chrome»")
             fields = parse_info(info)
             fields["vk"] = f"{host}/{screen}"
-            page.evaluate(JS_SCROLL, 3)
+            page.evaluate(JS_SCROLL, 4)
             group_imgs = page.evaluate(JS_IMGS)
             gid = _group_id(info.get("html") or "") or _group_id(page.content())
 
@@ -221,7 +262,7 @@ def fetch(url: str, base: Path, log=print, photo_limit=24) -> dict:
                 try:
                     page.goto(f"{host}/photos-{gid}", wait_until="domcontentloaded", timeout=40000)
                     page.wait_for_timeout(2000)
-                    page.evaluate(JS_SCROLL, 4)
+                    page.evaluate(JS_SCROLL, 8)
                     photos = _clean_photos(page.evaluate(JS_IMGS), photo_limit)
                 except Exception as exc:
                     notes.append(f"фото: {exc}")
@@ -231,18 +272,37 @@ def fetch(url: str, base: Path, log=print, photo_limit=24) -> dict:
             if not photos and info.get("image"):
                 photos = [info["image"]]
 
-            items = []
+            items, seen_titles = [], set()
+            pages = []
+            if menu_url:
+                pages.append(menu_url if menu_url.startswith("http") else "https://" + menu_url.lstrip("/"))
+            for h in info.get("links") or []:
+                if gid and gid in h or screen in h:
+                    pages.append(h if h.startswith("http") else host + h)
             if gid:
-                log("Смотрю товары и цены…")
+                pages += [f"{host}/market-{gid}", f"{host}/uslugi-{gid}", f"{host}/market/-{gid}"]
+            done = set()
+            for link in pages:
+                key = link.split("#")[0]
+                if key in done or len(done) >= 5:
+                    continue
+                done.add(key)
+                log("Смотрю меню и цены…")
                 try:
-                    page.goto(f"{host}/market-{gid}", wait_until="domcontentloaded", timeout=40000)
+                    page.goto(link, wait_until="domcontentloaded", timeout=40000)
                     page.wait_for_timeout(2000)
-                    page.evaluate(JS_SCROLL, 3)
+                    page.evaluate(JS_SCROLL, 25)
                     for it in page.evaluate(JS_MARKET):
-                        items.append({"title": it["title"].strip()[:120], "price": it["price"], "desc": "",
-                                      "cat": "", "photo_url": it.get("photo") or ""})
+                        t = it["title"].strip()[:120]
+                        if t.lower() in seen_titles:
+                            continue
+                        seen_titles.add(t.lower())
+                        items.append({"title": t, "price": it["price"], "desc": "", "cat": "",
+                                      "photo_url": it.get("photo") or ""})
                 except Exception as exc:
-                    notes.append(f"товары: {exc}")
+                    notes.append(f"меню: {exc}")
+                if len(items) >= 10 and not menu_url:
+                    break
             if not gid:
                 notes.append("не нашла номер группы — фото взяты только с главной страницы")
             if not items:

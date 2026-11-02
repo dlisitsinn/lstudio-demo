@@ -1,56 +1,168 @@
 {
-  "title_ui": "Кафе, столовая, банкеты (Астория)",
-  "order": 4,
-  "repo": "dlisitsinn/cafe-astoria",
-  "keywords": ["кафе", "столов", "ресторан", "банкет", "кухн", "пицц", "суши", "шаурм", "кофейн", "кофе", "бар", "пекарн", "выпечк", "кондитер", "торт", "доставка еды", "бургер", "шашлык", "блин"],
-  "title": "Кафе «{name}» — {city}",
-  "default_cat": "Меню",
-  "defaults": {
-    "tagline": "Кафе · домашняя кухня",
-    "about1": "Добро пожаловать! Уютный зал, домашняя кухня, банкеты и семейные торжества.",
-    "phone": "+7 (900) 000-00-00",
-    "city": "Ваш город",
-    "hours": "ежедневно 10:00–22:00"
+ "title_ui": "Столовая, домашняя кухня, банкеты (Астория)",
+ "order": 6,
+ "repo": "dlisitsinn/cafe-astoria",
+ "keywords": [
+  "столов",
+  "банкет",
+  "поминальн",
+  "домашняя кухня",
+  "обеды",
+  "бизнес-ланч",
+  "комплексн"
+ ],
+ "title": "Кафе «{name}» — {city}",
+ "default_cat": "Меню",
+ "defaults": {
+  "tagline": "Кафе · домашняя кухня",
+  "about1": "Добро пожаловать! Уютный зал, домашняя кухня, банкеты и семейные торжества.",
+  "phone": "+7 (900) 000-00-00",
+  "city": "Ваш город",
+  "hours": "ежедневно 10:00–22:00"
+ },
+ "slots": [],
+ "ops": [
+  {
+   "remove": "#ny-invite, #ny-menu, .ny-btn, .sister"
   },
-  "slots": [],
-  "ops": [
-    {"remove": "#ny-invite, #ny-menu, .ny-btn, .sister"},
-    {"replace": {"Астория": "{name}", "Карталы": "{city}"}},
-    {"text": ".logo b", "value": "«{name}»"},
-    {"text": ".logo span", "value": "кафе · {city}"},
-    {"text": ".hero .caps", "value": "{tagline}"},
-    {"text": ".hero h1", "value": "«{name}»"},
-    {"text": ".hero-sub", "value": "{about1}"},
-    {"text": ".hero-addr", "value": "{address_full}"},
-    {"text": "a[href^='tel:']", "value": "{phone}", "all": true},
-    {"tel": true},
-
-    {"when": "items", "group": ".menu-sec", "fields": [
-      {"attr": "id", "value": "{cat_id}"},
-      {"sel": ".menu-title", "text": "{cat}"},
-      {"sel": ".sub-label", "remove": true, "all": true}
-    ], "lists": [
-      {"item": ".dish", "fields": [
-        {"sel": ".dish-name", "text": "{title}"},
-        {"sel": ".dish-price", "text": "{price}", "empty": "clear"},
-        {"sel": ".dish-desc", "text": "{desc}", "empty": "remove"}
-      ]}
-    ]},
-    {"when": "items", "list": ".chip", "from": "cats", "fields": [
-      {"text": "{name}"},
-      {"attr": "href", "value": "#demo-cat-{n}"},
-      {"attr": "data-sec", "value": "demo-cat-{n}"}
-    ]},
-
-    {"attr": ".map-frame iframe", "name": "src", "value": "https://yandex.ru/map-widget/v1/?text={address_q}&z=16"},
-    {"attr": ".route-actions a:first-child", "name": "href", "value": "https://yandex.ru/maps/?text={address_q}"},
-    {"attr": ".route-actions a:nth-child(2)", "name": "href", "value": "https://2gis.ru/search/{address_q}"},
-    {"text": ".route-note", "value": "Кафе «{name}» — {address_full}"},
-    {"text": ".c-item:has(a[href^='tel:']) small", "value": "{hours}"},
-    {"text": ".c-item p", "value": "{address_full}"},
-    {"html": "footer", "value": "Кафе «{name}» · {address_full} · {phone}"},
-
-    {"gallery": {"after": ".hero", "title": "Наш зал и блюда", "min": 3}, "css": "#demo-gallery{background:var(--paper-deep);border-bottom:1px solid var(--line);text-align:center}#demo-gallery .dg-title{font-weight:400;font-size:clamp(30px,5vw,44px)}#demo-gallery .dg-in{max-width:980px}"},
-    {"fit": ".hero h1", "ratio": 0.96}
-  ]
+  {
+   "replace": {
+    "Астория": "{name}",
+    "Карталы": "{city}"
+   }
+  },
+  {
+   "text": ".logo b",
+   "value": "«{name}»"
+  },
+  {
+   "text": ".logo span",
+   "value": "кафе · {city}"
+  },
+  {
+   "text": ".hero .caps",
+   "value": "{tagline}"
+  },
+  {
+   "text": ".hero h1",
+   "value": "«{name}»"
+  },
+  {
+   "text": ".hero-sub",
+   "value": "{about1}"
+  },
+  {
+   "text": ".hero-addr",
+   "value": "{address_full}"
+  },
+  {
+   "text": "a[href^='tel:']",
+   "value": "{phone}",
+   "all": true
+  },
+  {
+   "tel": true
+  },
+  {
+   "when": "items",
+   "group": ".menu-sec",
+   "fields": [
+    {
+     "attr": "id",
+     "value": "{cat_id}"
+    },
+    {
+     "sel": ".menu-title",
+     "text": "{cat}"
+    },
+    {
+     "sel": ".sub-label",
+     "remove": true,
+     "all": true
+    }
+   ],
+   "lists": [
+    {
+     "item": ".dish",
+     "fields": [
+      {
+       "sel": ".dish-name",
+       "text": "{title}"
+      },
+      {
+       "sel": ".dish-price",
+       "text": "{price}",
+       "empty": "clear"
+      },
+      {
+       "sel": ".dish-desc",
+       "text": "{desc}",
+       "empty": "remove"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "when": "items",
+   "list": ".chip",
+   "from": "cats",
+   "fields": [
+    {
+     "text": "{name}"
+    },
+    {
+     "attr": "href",
+     "value": "#demo-cat-{n}"
+    },
+    {
+     "attr": "data-sec",
+     "value": "demo-cat-{n}"
+    }
+   ]
+  },
+  {
+   "attr": ".map-frame iframe",
+   "name": "src",
+   "value": "https://yandex.ru/map-widget/v1/?text={address_q}&z=16"
+  },
+  {
+   "attr": ".route-actions a:first-child",
+   "name": "href",
+   "value": "https://yandex.ru/maps/?text={address_q}"
+  },
+  {
+   "attr": ".route-actions a:nth-child(2)",
+   "name": "href",
+   "value": "https://2gis.ru/search/{address_q}"
+  },
+  {
+   "text": ".route-note",
+   "value": "Кафе «{name}» — {address_full}"
+  },
+  {
+   "text": ".c-item:has(a[href^='tel:']) small",
+   "value": "{hours}"
+  },
+  {
+   "text": ".c-item p",
+   "value": "{address_full}"
+  },
+  {
+   "html": "footer",
+   "value": "Кафе «{name}» · {address_full} · {phone}"
+  },
+  {
+   "gallery": {
+    "after": ".hero",
+    "title": "Наш зал и блюда",
+    "min": 3
+   },
+   "css": "#demo-gallery{background:var(--paper-deep);border-bottom:1px solid var(--line);text-align:center}#demo-gallery .dg-title{font-weight:400;font-size:clamp(30px,5vw,44px)}#demo-gallery .dg-in{max-width:980px}"
+  },
+  {
+   "fit": ".hero h1",
+   "ratio": 0.96
+  }
+ ]
 }

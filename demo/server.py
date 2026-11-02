@@ -61,9 +61,9 @@ class App:
         return {"url": f"/files/{job}/{fname}"}
 
     # ---------- ВК ----------
-    def from_vk(self, url: str, job: str) -> dict:
+    def from_vk(self, url: str, job: str, menu_url: str = "") -> dict:
         data = None
-        if vkdata.read_token(self.base):          # есть токен — сначала через API, это быстрее
+        if vkdata.read_token(self.base) and not menu_url:          # есть токен — сначала через API, это быстрее
             try:
                 data = vkdata.fetch(url, self._vk_factory())
             except vkdata.VKError:
@@ -71,7 +71,7 @@ class App:
         if data is None:                          # иначе — читаем страницу группы в окне Chrome
             self.status = "Открываю группу ВК…"
             try:
-                data = self._page_fetch(url, self.base, log=lambda m: setattr(self, "status", m))
+                data = self._page_fetch(url, self.base, log=lambda m: setattr(self, "status", m), menu_url=menu_url or "")
             finally:
                 self.status = ""
         d = self._job_dir(job)
@@ -223,7 +223,7 @@ def make_handler(app: App):
                 elif path == "/api/vk_connect":
                     res = app.vk_connect()
                 elif path == "/api/vk":
-                    res = app.from_vk(data.get("url"), data.get("job"))
+                    res = app.from_vk(data.get("url"), data.get("job"), data.get("menu_url") or "")
                 elif path == "/api/parse":
                     res = {"items": builder.parse_items_text(data.get("text"))}
                 elif path == "/api/guess":
