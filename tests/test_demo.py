@@ -197,6 +197,7 @@ def test_server_upload_and_build(tmp_dirs):
 
 def test_server_vk_downloads(tmp_dirs, monkeypatch):
     monkeypatch.setattr(vkdata, "download", lambda u, dest, opener=None: dest.write_bytes(PNG) or True)
+    monkeypatch.setattr(vkdata, "read_token", lambda base: "tok")
     app = server.App(vk_client_factory=FakeVK)
     res = app.from_vk("vk.com/roza", app.new_job())
     assert res["template"] == "beauty" and len(res["photos"]) == 1
@@ -210,18 +211,52 @@ def test_updater_never_touches_user_data():
     assert not updater.is_protected("demo/apply.js")
 
 
-def test_vk_connect_catches_token(tmp_path):
-    pytest.importorskip("playwright.sync_api")
-    from demo import vkauth
-    (tmp_path / ".env").write_text("# настройки\nVK_USER_TOKEN=\nAUTO_UPDATE=да\n", encoding="utf-8")
-    page = tmp_path / "auth.html"
-    page.write_text("<script>setTimeout(()=>location.href='blank.html#access_token=vk1.a.TEST&expires_in=0',300)</script>")
-    (tmp_path / "blank.html").write_text("ok")
+def test_server_vk_falls_back_to_browser(tmp_dirs, monkeypatch):
+    monkeypatch.setattr(vkdata, "download", lambda u, dest, opener=None: dest.write_bytes(PNG) or True)
+    monkeypatch.setattr(vkdata, "read_token", lambda base: "")
+    app = server.App()
+    app._page_fetch = lambda url, base, log=print: {
+        "fields": {"name": "Цветы Флора", "tagline": "", "about": "", "city": "", "vk": url, "phone": "",
+                   "address": "", "hours": ""},
+        "items": [{"title": "Букет", "price": "3 500 ₽", "desc": "", "cat": "", "photo_url": "https://x/1.jpg"}],
+        "photo_urls": ["https://x/2.jpg"], "activity": "", "notes": []}
+    res = app.from_vk("vk.com/flora", app.new_job())
+    assert res["template"] == "flowers" and res["items"][0]["photo"] and len(res["photos"]) == 1
+
+
+def test_vkpage_parse_and_photos():
+    from demo import vkpage
+    f = vkpage.parse_info({"title": "Will Taste | ВКонтакте", "desc": "Кафе необистро",
+                           "text": "Will Taste\nПодписаться\nг. Карталы, ул. Ленина, 14\nПн–Вс 10:00–22:00\n+7 (912) 000-11-22"})
+    assert f["name"] == "Will Taste" and f["about"] == "Кафе необистро"
+    assert f["address"] == "г. Карталы, ул. Ленина, 14" and f["hours"] == "Пн–Вс 10:00–22:00"
+    assert f["phone"] == "+7 (912) 000-11-22"
+    ph = vkpage._clean_photos([("https://sun9.userapi.com/a.jpg?size=50x50", 50),
+                               ("https://sun9.userapi.com/b.jpg?size=807x605&amp;q=1", 0),
+                               ("https://sun9.userapi.com/b.jpg?size=604x453", 0)], 10)
+    assert ph == ["https://sun9.userapi.com/b.jpg?size=807x605&q=1"]
+    assert vkpage._group_id('<a href="/wall-12345_67">') == "12345"
+
+
+def test_vkpage_market_js_on_fake_page(tmp_path):
+    pw = pytest.importorskip("playwright.sync_api")
+    from demo import vkpage
+    page_html = tmp_path / "m.html"
+    page_html.write_text('''<html><body>
+      <div class="card"><div><img src="https://sun9.userapi.com/p1.jpg?size=600x600"></div>
+        <div><span>Букет из 15 роз</span><span>3 500 ₽</span></div></div>
+      <div class="card"><div><img src="https://sun9.userapi.com/p2.jpg?size=600x600"></div>
+        <div><span>Тюльпаны</span><span>от 2 900 ₽</span></div></div>
+    </body></html>''', encoding="utf-8")
     try:
-        token = vkauth.connect(tmp_path, log=lambda m: None, timeout=20, headless=True, url=page.as_uri())
-    except RuntimeError as exc:
+        with pw.sync_playwright() as p:
+            b = p.chromium.launch()
+            pg = b.new_page()
+            pg.goto(page_html.as_uri())
+            items = pg.evaluate(vkpage.JS_MARKET)
+            imgs = pg.evaluate(vkpage.JS_IMGS)
+            b.close()
+    except Exception as exc:
         pytest.skip(f"браузер недоступен: {exc}")
-    assert token == "vk1.a.TEST"
-    env = (tmp_path / ".env").read_text(encoding="utf-8")
-    assert "VK_USER_TOKEN=vk1.a.TEST" in env and "AUTO_UPDATE=да" in env
-    assert vkdata.read_token(tmp_path) == "vk1.a.TEST"
+    assert [(i["title"], i["price"]) for i in items] == [("Букет из 15 роз", "3 500 ₽"), ("Тюльпаны", "от 2 900 ₽")]
+    assert items[0]["photo"].endswith("p1.jpg?size=600x600") and len(imgs) == 2

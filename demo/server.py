@@ -15,7 +15,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
-from . import builder, shots, vkauth, vkdata
+from . import builder, shots, vkdata, vkpage
 
 STATIC = Path(__file__).resolve().parent / "static"
 IMG_EXT = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"}
@@ -29,6 +29,7 @@ class App:
         self.status = ""
         self._vk_factory = vk_client_factory or (lambda: vkdata.Client(vkdata.read_token(self.base)))
         self._shoot = shooter or shots.shoot
+        self._page_fetch = vkpage.fetch
 
     # ---------- загрузки ----------
     @staticmethod
@@ -61,8 +62,18 @@ class App:
 
     # ---------- ВК ----------
     def from_vk(self, url: str, job: str) -> dict:
-        client = self._vk_factory()
-        data = vkdata.fetch(url, client)
+        data = None
+        if vkdata.read_token(self.base):          # есть токен — сначала через API, это быстрее
+            try:
+                data = vkdata.fetch(url, self._vk_factory())
+            except vkdata.VKError:
+                data = None
+        if data is None:                          # иначе — читаем страницу группы в окне Chrome
+            self.status = "Открываю группу ВК…"
+            try:
+                data = self._page_fetch(url, self.base, log=lambda m: setattr(self, "status", m))
+            finally:
+                self.status = ""
         d = self._job_dir(job)
         photos = []
         for i, u in enumerate(data["photo_urls"]):
@@ -83,12 +94,12 @@ class App:
         return {"fields": f, "items": items, "photos": photos, "template": guess, "notes": data["notes"]}
 
     def vk_connected(self) -> bool:
-        return bool(vkdata.read_token(self.base))
+        return vkpage.marker(self.base).exists()
 
     def vk_connect(self) -> dict:
         self.status = "Открываю Chrome…"
         try:
-            vkauth.connect(self.base, log=lambda m: setattr(self, "status", m))
+            vkpage.login(self.base, log=lambda m: setattr(self, "status", m))
         finally:
             self.status = ""
         return {"ok": True}
