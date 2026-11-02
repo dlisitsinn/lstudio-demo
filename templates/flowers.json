@@ -1,0 +1,133 @@
+{
+ "title_ui": "Цветы и подарки (Sally)",
+ "order": 5,
+ "repo": "dlisitsinn/sally",
+ "keywords": [
+  "цвет",
+  "флорист",
+  "букет",
+  "flower",
+  "роз",
+  "растени",
+  "подарк",
+  "шар",
+  "декор",
+  "тюльпан"
+ ],
+ "title": "{NAME} — цветочная мастерская",
+ "default_cat": "Букеты",
+ "watch": true,
+ "defaults": {
+  "tagline": "Букеты и авторские композиции с доставкой",
+  "about1": "Сад, в котором вы найдёте разнообразные сорта цветов, букеты и авторские композиции",
+  "phone": "+7 (900) 000-00-00",
+  "city": "Ваш город"
+ },
+ "slots": [
+  "hero",
+  "s2"
+ ],
+ "before_shot": [
+  {
+   "click_text": "Каталог",
+   "wait": 1500
+  }
+ ],
+ "ops": [
+  {
+   "replace": {
+    "«SALLY — цветы Салли»": "«{name}»",
+    "Букеты SALLY": "Букеты {name}",
+    "© SALLY, 2026": "© {name}, {year}",
+    "SALLY": "{NAME}",
+    "Салли": "{name}",
+    "Sally": "{name}",
+    "atelier · since 2018": "{city}",
+    "цветы · atelier · since 2018": "цветы · {city}",
+    "г. Москва, ул. Цветочная, д. 12": "{address_full}",
+    "+7 (999) 000-00-00": "{phone}"
+   }
+  },
+  {
+   "id": "hide",
+   "css": "footer li:has(br) ~ li:has(br){display:none!important}"
+  },
+  {
+   "attr": "a[href^='https://wa.me/']",
+   "name": "href",
+   "value": "https://wa.me/{phone_wa}",
+   "all": true
+  },
+  {
+   "tel": true
+  },
+  {
+   "text": "section h2 + p",
+   "value": "{about1}"
+  },
+  {
+   "img": "section:has(> img) > img",
+   "slot": "hero"
+  },
+  {
+   "when": "items",
+   "list": "div.group.flex.flex-col:has(> h3)",
+   "inplace": true,
+   "max": 36,
+   "fields": [
+    {
+     "sel": "h3",
+     "text": "{title}"
+    },
+    {
+     "sel": "p",
+     "text": "{price}",
+     "empty": "clear"
+    },
+    {
+     "sel": "img",
+     "photo": "item",
+     "fallback": "gallery"
+    },
+    {
+     "sel": "img",
+     "attr": "alt",
+     "value": "{title}"
+    }
+   ]
+  },
+  {
+   "when": "cats",
+   "list": "section[class*='grid-cols-6'] > button",
+   "from": "cats",
+   "inplace": true,
+   "fields": [
+    {
+     "sel": "span",
+     "text": "{name}"
+    },
+    {
+     "sel": "img",
+     "photo": "item",
+     "fallback": "gallery"
+    }
+   ]
+  },
+  {
+   "when": "cats",
+   "list": "section div.flex.flex-wrap.gap-2 > button",
+   "from": "cats",
+   "inplace": true,
+   "fields": [
+    {
+     "text": "{name}"
+    }
+   ]
+  },
+  {
+   "when": "!cats",
+   "id": "nocats",
+   "css": "section[class*='grid-cols-6'],section div.flex.flex-wrap.gap-2{display:none!important}"
+  }
+ ]
+}

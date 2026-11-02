@@ -1,0 +1,316 @@
+{
+ "title_ui": "Салон красоты (Velvet)",
+ "order": 1,
+ "repo": "dlisitsinn/velvet",
+ "keywords": [
+  "салон",
+  "красот",
+  "маникюр",
+  "ногт",
+  "nail",
+  "бров",
+  "ресниц",
+  "парикмах",
+  "барбер",
+  "barber",
+  "стрижк",
+  "косметолог",
+  "spa",
+  "спа",
+  "массаж",
+  "эпиляц",
+  "визаж",
+  "beauty",
+  "лэш",
+  "шугар"
+ ],
+ "title": "{name} — {tagline}",
+ "default_cat": "Услуги",
+ "defaults": {
+  "tagline": "салон красоты · {city}",
+  "about1": "{name} — место, где о вас позаботятся: аккуратная работа мастеров, качественные материалы и спокойная атмосфера.",
+  "phone": "+7 (900) 000-00-00",
+  "hours": "ежедневно 10:00–20:00",
+  "city": "Ваш город"
+ },
+ "slots": [
+  "hero",
+  "s1",
+  "b1",
+  "b2",
+  "about",
+  "c1",
+  "pb",
+  "ct"
+ ],
+ "ops": [
+  {
+   "id": "mobile",
+   "css": "@media(max-width:700px){.header{padding:0 16px}.header__left{display:none}.header__brand{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100vw - 150px)}.header__city{display:none}.header__right .pill{padding:8px 14px!important;font-size:12px!important}.hero__top ul:nth-child(2){display:none}.hero__top{left:16px;right:16px}.hero__bottom{left:16px;right:16px;gap:10px}.hero__bottom .pill{padding:11px 18px;font-size:13px}.hero__note{white-space:normal;text-align:center;width:90%}.h-giant{font-size:clamp(44px,13vw,64px)}.section{padding:56px 16px}.about__body,.consult__body{padding:56px 16px}.services__head,.sets__head{flex-direction:column;align-items:flex-start;gap:12px;margin-bottom:32px}.banner__inner{padding:0 16px;text-align:center}.banner__inner h2{font-size:clamp(34px,10vw,48px)}.banner__btns{flex-wrap:wrap;justify-content:center}}"
+  },
+  {
+   "when": "item_photos",
+   "text": "a[href='#sets']",
+   "value": "работы",
+   "all": true
+  },
+  {
+   "replace": {
+    "Velvet": "{name}",
+    "VELVET": "{NAME}",
+    "Москва": "{city}"
+   }
+  },
+  {
+   "remove": ".cert, .reviews, .hero__top li:has(a[href='#cert']), .hero__top li:has(a[href='#reviews']), .footer a[href='#cert'], .footer a[href^='mailto:'], .footer__col:nth-child(3) a[href='#']"
+  },
+  {
+   "text": ".header__brand",
+   "value": "{NAME}"
+  },
+  {
+   "text": ".hero__word h1",
+   "value": "{NAME}"
+  },
+  {
+   "text": ".footer__brand",
+   "value": "{NAME}"
+  },
+  {
+   "text": ".footer__word",
+   "value": "{NAME}"
+  },
+  {
+   "text": ".header__city",
+   "value": "{city}",
+   "empty": "remove"
+  },
+  {
+   "text": ".hero__top ul:nth-child(3) li:first-child a",
+   "value": "{city}",
+   "empty": "remove"
+  },
+  {
+   "text": "a[href^='tel:']:not(.pill)",
+   "value": "{phone}",
+   "all": true
+  },
+  {
+   "tel": true
+  },
+  {
+   "text": ".hero__note",
+   "value": "{tagline}"
+  },
+  {
+   "when": "items",
+   "remove": ".tags, .price th:nth-child(n+3)"
+  },
+  {
+   "when": "items",
+   "text": ".price th:nth-child(2)",
+   "value": "цена"
+  },
+  {
+   "when": "items",
+   "list": ".price tr:has(td)",
+   "fields": [
+    {
+     "sel": "td:nth-child(1)",
+     "text": "{title}"
+    },
+    {
+     "sel": "td:nth-child(2)",
+     "text": "{price}",
+     "empty": "keep"
+    },
+    {
+     "sel": "td:nth-child(n+3)",
+     "remove": true,
+     "all": true
+    }
+   ]
+  },
+  {
+   "when": "items",
+   "text": ".services .mono-note",
+   "value": "*стоимость указана в рублях"
+  },
+  {
+   "list": ".banner",
+   "max": 2,
+   "fields": [
+    {
+     "sel": "h2",
+     "text": "{title}"
+    },
+    {
+     "sel": ".mono-note",
+     "text": "{price}",
+     "empty": "remove"
+    },
+    {
+     "sel": ".banner__bg img",
+     "photo": "item",
+     "fallback": "b{n}"
+    }
+   ]
+  },
+  {
+   "when": "item_photos",
+   "list": ".set",
+   "only_photos": true,
+   "max": 6,
+   "fields": [
+    {
+     "sel": "h3",
+     "text": "{title}"
+    },
+    {
+     "sel": ".mono-note",
+     "text": "{price}",
+     "empty": "remove"
+    },
+    {
+     "sel": "img",
+     "photo": "item"
+    }
+   ]
+  },
+  {
+   "when": "item_photos",
+   "text": ".sets .h-giant",
+   "value": "работы"
+  },
+  {
+   "text": ".sets__head .mono-note",
+   "value": "фото наших работ и цены — записывайтесь по телефону {phone}",
+   "when": "item_photos"
+  },
+  {
+   "when": "!item_photos",
+   "list": ".set",
+   "max": 3,
+   "fields": [
+    {
+     "sel": "h3",
+     "text": "{title}"
+    },
+    {
+     "sel": ".mono-note",
+     "text": "{price}",
+     "empty": "remove"
+    }
+   ]
+  },
+  {
+   "when": "!item_photos",
+   "text": ".sets .h-giant",
+   "value": "популярное"
+  },
+  {
+   "when": "!item_photos",
+   "text": "a[href='#sets']",
+   "value": "популярное",
+   "all": true
+  },
+  {
+   "when": "!item_photos",
+   "text": ".sets__head .mono-note",
+   "value": "записывайтесь по телефону {phone}"
+  },
+  {
+   "text": ".about__body .mono-note",
+   "value": "{name} · {city}"
+  },
+  {
+   "text": ".about__body p:nth-of-type(1)",
+   "value": "{about1}"
+  },
+  {
+   "text": ".about__body p:nth-of-type(2)",
+   "value": "{about2}",
+   "empty": "remove"
+  },
+  {
+   "text": ".contacts .addr:nth-child(1) b",
+   "value": "{address}"
+  },
+  {
+   "remove": ".contacts .addr:nth-child(1) .mono-note"
+  },
+  {
+   "text": ".contacts .addr:nth-child(2) b",
+   "value": "{hours}"
+  },
+  {
+   "text": ".contacts .addr:nth-child(2) .mono-note",
+   "value": "запись по телефону"
+  },
+  {
+   "text": ".footer__col:nth-child(1) a[href='#contacts']",
+   "value": "{address}"
+  },
+  {
+   "text": ".footer__col:nth-child(1) .mono-note",
+   "value": "{hours}"
+  },
+  {
+   "html": ".footer__col:nth-child(3)",
+   "value": "<span class=\"mono-note\">мы на связи</span><a href=\"tel:{phone_href}\">{phone}</a><span class=\"mono-note\">{city}</span>"
+  },
+  {
+   "img": ".hero__bg img",
+   "slot": "hero"
+  },
+  {
+   "img": ".footer__bg img",
+   "slot": "hero"
+  },
+  {
+   "img": ".services__photo img",
+   "slot": "s1"
+  },
+  {
+   "img": ".about__photo img",
+   "slot": "about"
+  },
+  {
+   "img": ".consult__photo img",
+   "slot": "c1"
+  },
+  {
+   "img": ".photobreak img",
+   "slot": "pb"
+  },
+  {
+   "img": ".contacts__photo img",
+   "slot": "ct"
+  },
+  {
+   "gallery": {
+    "after": ".sets",
+    "title": "наши работы",
+    "min": 7
+   },
+   "css": "#demo-gallery{background:var(--cream)}#demo-gallery .dg-title{font-weight:500;letter-spacing:-.02em}"
+  },
+  {
+   "fit": ".hero__word h1",
+   "ratio": 0.92,
+   "nowrap": true
+  },
+  {
+   "fit": ".footer__word",
+   "ratio": 0.96,
+   "nowrap": true
+  },
+  {
+   "fit": ".header__brand",
+   "maxw": 380,
+   "nowrap": true,
+   "min": 14,
+   "ratio": 0.5
+  }
+ ]
+}

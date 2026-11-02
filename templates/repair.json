@@ -1,0 +1,228 @@
+{
+ "title_ui": "Ремонт, стройка, интерьер (Pure Vision)",
+ "order": 3,
+ "repo": "dlisitsinn/pure-vision",
+ "keywords": [
+  "ремонт",
+  "строит",
+  "стройк",
+  "отделк",
+  "интерьер",
+  "дизайн",
+  "архитект",
+  "проектир",
+  "кровл",
+  "фасад",
+  "плитк",
+  "сантехн",
+  "электрик",
+  "окна",
+  "двери",
+  "потолк",
+  "мебел",
+  "кухн",
+  "бригад",
+  "строймат",
+  "дом под ключ"
+ ],
+ "title": "{name} — {tagline}",
+ "default_cat": "Услуги",
+ "defaults": {
+  "tagline": "ремонт и отделка",
+  "about1": "{name} — делаем ремонт под ключ: от замера и сметы до уборки после работ. Работаем по договору, сроки и цену фиксируем заранее.",
+  "phone": "+7 (900) 000-00-00",
+  "hours": "пн–сб · 9:00–19:00",
+  "city": "Ваш город"
+ },
+ "slots": [
+  "hero",
+  "about"
+ ],
+ "ops": [
+  {
+   "replace": {
+    "Pure Vision": "{name}",
+    "PURE VISION": "{NAME}",
+    "О бюро": "О нас",
+    "Процесс": "Как работаем",
+    "Тип проекта: дом, интерьер, общественное…": "Что нужно сделать",
+    "Смотреть проекты": "Смотреть работы"
+   }
+  },
+  {
+   "remove": ".about .stats, .crow:has(a[href^='mailto:']), .projects .num"
+  },
+  {
+   "text": ".logo span",
+   "value": "{NAME}"
+  },
+  {
+   "text": ".logo small",
+   "value": "{tagline}"
+  },
+  {
+   "html": ".hero__meta",
+   "value": "{city}<br>{tagline}"
+  },
+  {
+   "text": ".hero h1",
+   "value": "{name}"
+  },
+  {
+   "text": ".hero__sub p",
+   "value": "{about1}"
+  },
+  {
+   "text": "a[href^='tel:']",
+   "value": "{phone}",
+   "all": true
+  },
+  {
+   "tel": true
+  },
+  {
+   "html": ".projects h2.sec",
+   "value": "Наши<br>работы"
+  },
+  {
+   "when": "item_photos",
+   "list": ".proj",
+   "only_photos": true,
+   "max": 10,
+   "fields": [
+    {
+     "sel": ".proj__cat",
+     "text": "{cat}",
+     "empty": "remove"
+    },
+    {
+     "sel": "img",
+     "photo": "item"
+    },
+    {
+     "sel": "h3",
+     "text": "{title}"
+    },
+    {
+     "sel": ".proj__meta",
+     "text": "{price}",
+     "empty": "remove"
+    }
+   ]
+  },
+  {
+   "when": "!item_photos",
+   "list": ".proj",
+   "from": "gallery_items",
+   "max": 10,
+   "fields": [
+    {
+     "sel": "img",
+     "photo": "item"
+    },
+    {
+     "sel": ".proj__row",
+     "remove": true
+    },
+    {
+     "sel": ".proj__cat",
+     "remove": true
+    }
+   ]
+  },
+  {
+   "when": "!photos",
+   "remove": ".proj__meta, .proj__cat"
+  },
+  {
+   "text": ".proj__more",
+   "value": "Больше фото — по телефону {phone} →"
+  },
+  {
+   "html": "#about h2",
+   "value": "Делаем ремонт, <em>за который не стыдно</em>"
+  },
+  {
+   "text": "#about .about__grid > div:first-child p:nth-of-type(1)",
+   "value": "{about1}"
+  },
+  {
+   "text": "#about .about__grid > div:first-child p:nth-of-type(2)",
+   "value": "{about2}",
+   "empty": "remove"
+  },
+  {
+   "html": ".services h2.sec",
+   "value": "Услуги<br>и цены"
+  },
+  {
+   "when": "items",
+   "list": ".svc",
+   "max": 14,
+   "fields": [
+    {
+     "sel": ".svc__n",
+     "text": "{nn}"
+    },
+    {
+     "sel": "h3",
+     "text": "{title}"
+    },
+    {
+     "sel": "p",
+     "text": "{desc}",
+     "empty": "clear"
+    },
+    {
+     "sel": ".svc__arr",
+     "text": "{price}",
+     "empty": "keep"
+    }
+   ]
+  },
+  {
+   "css": ".svc__arr{white-space:nowrap;font-size:18px}",
+   "id": "svc"
+  },
+  {
+   "html": ".steps",
+   "value": "<div class=\"step\"><b>Этап 01</b><h4>Выезд и замер</h4><p>Приезжаем на объект, обсуждаем задачу и делаем замеры.</p></div><div class=\"step\"><b>Этап 02</b><h4>Смета</h4><p>Считаем работы и материалы, фиксируем цену и сроки в договоре.</p></div><div class=\"step\"><b>Этап 03</b><h4>Работы</h4><p>Выполняем ремонт по плану и показываем промежуточные результаты.</p></div><div class=\"step\"><b>Этап 04</b><h4>Сдача объекта</h4><p>Принимаете работу, убираем мусор, даём гарантию.</p></div>"
+  },
+  {
+   "text": ".process .num",
+   "value": "4 этапа · без сюрпризов в смете"
+  },
+  {
+   "text": ".crow:has(span:first-child) b",
+   "value": "{address}"
+  },
+  {
+   "text": ".crow:last-child b",
+   "value": "{hours}"
+  },
+  {
+   "text": ".crow:nth-last-child(2) span",
+   "value": "адрес"
+  },
+  {
+   "text": ".flogo",
+   "value": "{NAME}"
+  },
+  {
+   "text": ".footer small:last-child",
+   "value": "© {year} {name}"
+  },
+  {
+   "img": ".hero__bg img",
+   "slot": "hero"
+  },
+  {
+   "img": "#about .ph img",
+   "slot": "about"
+  },
+  {
+   "fit": ".hero h1",
+   "ratio": 0.98
+  }
+ ]
+}

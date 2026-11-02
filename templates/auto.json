@@ -1,0 +1,236 @@
+{
+ "title_ui": "Детейлинг и автосервис (Radiant Ride)",
+ "order": 2,
+ "repo": "dlisitsinn/radiant-ride",
+ "keywords": [
+  "авто",
+  "детейлинг",
+  "detailing",
+  "шиномонтаж",
+  "автомойк",
+  "мойка",
+  "кузов",
+  "тонировк",
+  "car",
+  "автосервис",
+  "сто ",
+  "полировк",
+  "химчистка салона",
+  "оклейк",
+  "запчаст",
+  "автоэлектрик",
+  "развал"
+ ],
+ "title": "{name} — {tagline}",
+ "default_cat": "Услуги",
+ "defaults": {
+  "tagline": "Уход за автомобилем · {city}",
+  "about1": "{name} — студия ухода за автомобилем. Делаем аккуратно, по договорённой цене и в срок.",
+  "phone": "+7 (900) 000-00-00",
+  "hours": "Ежедневно 9:00 — 21:00",
+  "city": "Ваш город"
+ },
+ "slots": [
+  "hero",
+  "about"
+ ],
+ "ops": [
+  {
+   "id": "fix",
+   "css": "@media(max-width:760px){.display{overflow-wrap:anywhere}.header .logo{font-size:17px;white-space:nowrap;max-width:calc(100vw - 110px);overflow:hidden;text-overflow:ellipsis}}.hero{overflow:hidden}.hero__content{max-width:100%}"
+  },
+  {
+   "replace": {
+    "Radiant Ride": "{name}",
+    "RADIANT RIDE": "{NAME}"
+   }
+  },
+  {
+   "remove": ".hero__badges, .promo, #reviews, a[href='#reviews'], .about .stats, .cinfo__item:has(a[href^='mailto:'])"
+  },
+  {
+   "html": ".logo",
+   "all": true,
+   "keep": "svg",
+   "value": "{NAME_FIRST}<em>{NAME_REST}</em>"
+  },
+  {
+   "html": ".hero h1.display",
+   "value": "{name_first} <span class=\"lime\">{name_rest}</span>"
+  },
+  {
+   "text": ".hero__tag",
+   "value": "{tagline}"
+  },
+  {
+   "text": "a[href^='tel:']",
+   "value": "{phone}",
+   "all": true
+  },
+  {
+   "tel": true
+  },
+  {
+   "when": "cats",
+   "list": ".dir",
+   "from": "cats",
+   "max": 3,
+   "fields": [
+    {
+     "sel": ".dir__num",
+     "text": "{nn}"
+    },
+    {
+     "sel": "h3",
+     "text": "{name}"
+    },
+    {
+     "sel": "ul",
+     "li": "{title} — {price}"
+    },
+    {
+     "sel": "img",
+     "photo": "item",
+     "fallback": "gallery"
+    }
+   ]
+  },
+  {
+   "when": "cats",
+   "text": ".dirs__head .sec-sub",
+   "value": "Чем мы занимаемся — подробные цены ниже."
+  },
+  {
+   "when": "!cats",
+   "remove": "#dirs, a[href='#dirs']"
+  },
+  {
+   "when": "items",
+   "list": ".srv",
+   "max": 12,
+   "fields": [
+    {
+     "sel": ".srv__cat",
+     "text": "{cat}",
+     "empty": "remove"
+    },
+    {
+     "sel": "img",
+     "photo": "item",
+     "fallback": "gallery"
+    },
+    {
+     "sel": "h3",
+     "text": "{title}"
+    },
+    {
+     "sel": ".srv__body p",
+     "text": "{desc}",
+     "empty": "remove"
+    },
+    {
+     "sel": ".srv__price",
+     "text": "{price}",
+     "empty": "keep"
+    }
+   ]
+  },
+  {
+   "when": "items",
+   "list": "#fService option",
+   "fields": [
+    {
+     "text": "{title}"
+    }
+   ]
+  },
+  {
+   "when": "item_photos",
+   "list": ".work",
+   "only_photos": true,
+   "max": 8,
+   "fields": [
+    {
+     "sel": ".work__tag",
+     "text": "{price}",
+     "empty": "remove"
+    },
+    {
+     "sel": "img",
+     "photo": "item"
+    },
+    {
+     "sel": ".work__model",
+     "text": "{title}"
+    },
+    {
+     "sel": ".work__list",
+     "text": "{desc}",
+     "empty": "remove"
+    }
+   ]
+  },
+  {
+   "when": "!item_photos",
+   "remove": "#works, a[href='#works']"
+  },
+  {
+   "text": "#about h2.sec-title",
+   "value": "{name}"
+  },
+  {
+   "text": "#about .reveal > p:nth-of-type(1)",
+   "value": "{about1}"
+  },
+  {
+   "text": "#about .reveal > p:nth-of-type(2)",
+   "value": "{about2}",
+   "empty": "remove"
+  },
+  {
+   "text": ".cinfo__item:has(a[href^='tel:']) small",
+   "value": "{hours}"
+  },
+  {
+   "text": ".cinfo__item:nth-last-child(2) .val",
+   "value": "{address}"
+  },
+  {
+   "remove": ".cinfo__item:nth-last-child(2) small, .cinfo__item:last-child small"
+  },
+  {
+   "text": ".cinfo__item:last-child .val",
+   "value": "{hours}"
+  },
+  {
+   "text": ".footer__bottom > span:first-child",
+   "value": "© {year} {name}"
+  },
+  {
+   "img": ".hero__bg img",
+   "slot": "hero"
+  },
+  {
+   "img": ".about__img img",
+   "slot": "about"
+  },
+  {
+   "gallery": {
+    "after": "#services",
+    "title": "Наши работы",
+    "min": 6
+   },
+   "css": "#demo-gallery{background:var(--bg,#0d0d10);color:#fff}#demo-gallery .dg-title{font-family:'Bebas Neue',sans-serif;letter-spacing:.03em;font-weight:400}"
+  },
+  {
+   "fit": ".hero h1.display",
+   "ratio": 0.9,
+   "nowrap": true,
+   "box": ".hero",
+   "min": 28
+  },
+  {
+   "dispatch": "#wTrack"
+  }
+ ]
+}

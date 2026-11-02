@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LStudio — демо-сайты</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F1F0F6; --panel:#FFFFFF; --ink:#1E1B2E; --muted:#6B6782; --line:#DEDBE8;
+  --accent:#4B3FD6; --accent-soft:#E9E7FB; --ok:#1F8A5B; --ok-soft:#E3F3EB;
+  --warn:#A8660F; --warn-soft:#FBF0DF; --err:#B4323A; --err-soft:#F9E4E5; --r:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 "Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+aside{border-right:1px solid var(--line);padding:22px 14px;background:#F7F6FB;display:flex;flex-direction:column;gap:16px}
+.brand{font-weight:700;font-size:19px;padding:0 8px;letter-spacing:-.01em}
+.brand small{display:block;font-weight:400;font-size:13px;color:var(--muted)}
+.hist h3{font-size:13px;font-weight:600;margin:0 8px 6px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hist button{display:block;width:100%;text-align:left;border:0;background:none;padding:8px;border-radius:8px;cursor:pointer}
+.hist button:hover{background:#ECEAF4}
+.hist button.on{background:var(--ink);color:#fff}
+.hist small{display:block;font-size:12px;opacity:.7}
+main{padding:26px 32px 80px;min-width:0}
+h1{font-size:26px;margin:0 0 4px;letter-spacing:-.015em}
+.sub{color:var(--muted);margin:0 0 22px;max-width:760px}
+.cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:24px;align-items:start}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px}
+.card h2{font-size:16px;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+.card h2 .n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:13px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+label.f.wide{grid-column:1/-1}
+input[type=text],input[type=tel],input[type=url],select,textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:#fff;color:var(--ink);font-size:15px}
+textarea{resize:vertical;min-height:70px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+.btn{text-decoration:none;color:var(--ink);display:inline-block;border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 16px;cursor:pointer;font-weight:500;white-space:nowrap}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff!important}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.big{padding:14px 26px;font-size:17px;font-weight:600;border-radius:12px;width:100%}
+.btn.small{padding:5px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.hint{font-size:13px;color:var(--muted)}
+.msg{font-size:14px;margin-top:10px;padding:9px 12px;border-radius:8px}
+.msg.ok{background:var(--ok-soft);color:var(--ok)}
+.msg.err{background:var(--err-soft);color:var(--err)}
+.msg.warn{background:var(--warn-soft);color:var(--warn)}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:18px;text-align:center;cursor:pointer;color:var(--muted)}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.drop b{display:block;color:var(--ink);font-size:16px;margin-bottom:2px}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.thumb{position:relative;width:84px;height:84px;border-radius:9px;overflow:hidden;border:1px solid var(--line);background:#eee;cursor:grab}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .x{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;cursor:pointer;line-height:1;font-size:14px}
+.thumb .tag{position:absolute;left:3px;bottom:3px;font-size:10px;background:var(--accent);color:#fff;padding:1px 6px;border-radius:6px}
+.thumb.dragging{opacity:.4}
+table.items{width:100%;border-collapse:collapse}
+table.items td{padding:4px 3px;vertical-align:middle}
+table.items input{padding:7px 8px;font-size:14px}
+.ph{width:46px;height:46px;border-radius:8px;border:1.5px dashed var(--line);display:grid;place-items:center;cursor:pointer;overflow:hidden;color:var(--muted);font-size:20px;background:#fafafa}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph.over{border-color:var(--accent);background:var(--accent-soft)}
+.del{border:0;background:none;color:var(--muted);cursor:pointer;font-size:18px;padding:4px 6px}
+.del:hover{color:var(--err)}
+.paste{display:none;margin-top:10px}
+.paste.on{display:block}
+.paste textarea{min-height:130px;font-family:ui-monospace,Consolas,monospace;font-size:13px}
+.result{position:sticky;top:16px}
+.empty{color:var(--muted);text-align:center;padding:40px 10px}
+.spin{display:inline-block;width:18px;height:18px;border:2.5px solid var(--accent-soft);border-top-color:var(--accent);border-radius:50%;animation:sp 1s linear infinite;vertical-align:-3px;margin-right:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.tabs{display:flex;gap:4px;margin-bottom:12px}
+.tabs button{border:0;background:none;padding:6px 12px;border-radius:8px;cursor:pointer;color:var(--muted);font-weight:500}
+.tabs button.on{background:#ECEAF4;color:var(--ink)}
+.shots{display:flex;flex-direction:column;gap:10px;max-height:70vh;overflow:auto;padding-right:4px}
+.shots.phone{display:grid;grid-template-columns:1fr 1fr;align-items:start}
+.shots a{display:block;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.shots img{display:block;width:100%}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+@media(max-width:1100px){.cols{grid-template-columns:1fr}.result{position:static}}
+@media(max-width:760px){.app{grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid var(--line)}main{padding:18px 16px 60px}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand">LStudio<small>демо-сайты для клиентов</small></div>
+    <button class="btn" id="newBtn">+ Новый сайт</button>
+    <div class="hist"><h3>Готовые</h3><div id="hist"><p class="hint" style="padding:0 8px">Пока пусто</p></div></div>
+  </aside>
+  <main>
+    <h1>Демо-сайт за минуту</h1>
+    <p class="sub">Вставьте ссылку на группу ВК или заполните вручную: название, фото и цены. Бот соберёт сайт на одном из ваших образцов и сделает скриншоты — их можно сразу отправить клиенту.</p>
+    <div class="cols">
+      <div>
+        <div class="card">
+          <h2><span class="n">1</span>Откуда взять данные</h2>
+          <div class="row">
+            <input type="url" id="vkUrl" placeholder="https://vk.com/salon_roza" style="flex:1;min-width:220px">
+            <button class="btn primary" id="vkBtn">Подтянуть из ВК</button>
+          </div>
+          <p class="hint" style="margin:8px 0 0">Бот возьмёт название, описание, телефон, адрес, товары с ценами и фото. Всё можно поправить ниже.</p>
+          <div id="vkMsg"></div>
+        </div>
+
+        <div class="card">
+          <h2><span class="n">2</span>О компании</h2>
+          <div class="grid2">
+            <label class="f wide">Образец сайта
+              <select id="template"></select></label>
+            <label class="f">Название *<input type="text" id="f_name" placeholder="Студия Роза"></label>
+            <label class="f">Слоган или чем занимаются<input type="text" id="f_tagline" placeholder="маникюр · брови · ресницы"></label>
+            <label class="f">Телефон<input type="tel" id="f_phone" placeholder="8 912 345-67-89"></label>
+            <label class="f">Город<input type="text" id="f_city" placeholder="Карталы"></label>
+            <label class="f">Адрес<input type="text" id="f_address" placeholder="ул. Ленина, 5"></label>
+            <label class="f">Часы работы<input type="text" id="f_hours" placeholder="ежедневно 10:00–20:00"></label>
+            <label class="f wide">О компании (необязательно)<textarea id="f_about" placeholder="Пара предложений о компании. Пустая строка — новый абзац."></textarea></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2><span class="n">3</span>Фото</h2>
+          <div class="drop" id="drop"><b>Перетащите фото сюда</b>или нажмите, чтобы выбрать. Первое фото — на главный экран, порядок можно менять перетаскиванием.</div>
+          <input type="file" id="fileIn" accept="image/*" multiple hidden>
+          <div class="thumbs" id="thumbs"></div>
+        </div>
+
+        <div class="card">
+          <h2><span class="n">4</span>Услуги, товары и цены</h2>
+          <table class="items"><tbody id="items"></tbody></table>
+          <div class="row" style="margin-top:10px">
+            <button class="btn small" id="addRow">+ Строка</button>
+            <button class="btn small" id="pasteBtn">Вставить списком</button>
+            <span class="hint">Фото к позиции — перетащите на квадратик слева.</span>
+          </div>
+          <div class="paste" id="paste">
+            <textarea id="pasteText" placeholder="# Ногти&#10;Маникюр с покрытием — 1500&#10;Педикюр — от 2000 | с покрытием&#10;# Брови&#10;Коррекция бровей 600"></textarea>
+            <p class="hint">Каждая позиция с новой строки: «Название — цена». После «|» — описание. Строка с «#» — название раздела.</p>
+            <div class="row"><button class="btn primary small" id="pasteOk">Добавить в список</button><button class="btn small" id="pasteCancel">Отмена</button></div>
+          </div>
+        </div>
+
+        <button class="btn primary big" id="buildBtn">Собрать сайт и сделать скриншоты</button>
+        <div id="buildMsg"></div>
+      </div>
+
+      <div class="result">
+        <div class="card" id="result"><div class="empty">Здесь появятся скриншоты готового сайта.</div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const FIELDS = ["name","tagline","phone","city","address","hours","about"];
+let job = "", photos = [], items = [], templates = [], current = null, tab = "pc", userPickedTemplate = false;
+
+async function api(path, body){
+  const r = await fetch(path, body === undefined ? {} : {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+  const j = await r.json().catch(() => ({error:"Бот не ответил"}));
+  if (!r.ok || j.error) throw new Error(j.error || ("Ошибка " + r.status));
+  return j;
+}
+function esc(s){ return String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function msg(el, text, kind){ $(el).innerHTML = text ? `<div class="msg ${kind||""}">${text}</div>` : ""; }
+
+// ---------- черновик ----------
+function save(){
+  const d = {job, photos, items, template: $("#template").value, picked: userPickedTemplate, vk: $("#vkUrl").value, f:{}};
+  FIELDS.forEach(k => d.f[k] = $("#f_"+k).value);
+  try { localStorage.setItem("lsdemo-draft", JSON.stringify(d)); } catch(e){}
+}
+function load(){
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem("lsdemo-draft") || "null"); } catch(e){}
+  if (!d) return false;
+  job = d.job || ""; photos = d.photos || []; items = d.items || [];
+  FIELDS.forEach(k => $("#f_"+k).value = (d.f||{})[k] || "");
+  $("#vkUrl").value = d.vk || "";
+  if (d.template) $("#template").value = d.template;
+  userPickedTemplate = !!d.picked;
+  return true;
+}
+async function ensureJob(){ if (!job) job = (await api("/api/job")).job; return job; }
+
+// ---------- шаблоны ----------
+async function loadTemplates(){
+  templates = await api("/api/templates");
+  $("#template").innerHTML = templates.map(t => `<option value="${t.id}">${esc(t.title)}</option>`).join("");
+}
+$("#template").addEventListener("change", () => { userPickedTemplate = true; save(); });
+let guessT = null;
+$("#f_name").addEventListener("input", () => {
+  if (userPickedTemplate) return;
+  clearTimeout(guessT);
+  guessT = setTimeout(async () => {
+    const text = [$("#f_name").value, $("#f_tagline").value, items.map(i => i.title).join(" ")].join(" ");
+    const g = await api("/api/guess", {text}).catch(() => ({}));
+    if (g.template) { $("#template").value = g.template; save(); }
+  }, 400);
+});
+
+// ---------- фото ----------
+function readFile(file){ return new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = no; r.readAsDataURL(file); }); }
+async function uploadFiles(files){
+  await ensureJob();
+  const out = [];
+  for (const f of files){
+    if (!f.type.startsWith("image/")) continue;
+    const data = await readFile(f);
+    const r = await api("/api/upload", {job, name:f.name, data});
+    out.push(r.url);
+  }
+  return out;
+}
+function renderThumbs(){
+  $("#thumbs").innerHTML = photos.map((u, i) => `<div class="thumb" draggable="true" data-i="${i}">
+      <img src="${esc(u)}" alt="">${i === 0 ? '<span class="tag">главное</span>' : ""}
+      <button class="x" data-x="${i}" title="Убрать">×</button></div>`).join("");
+}
+const drop = $("#drop");
+drop.addEventListener("click", () => $("#fileIn").click());
+$("#fileIn").addEventListener("change", async e => { await addPhotos([...e.target.files]); e.target.value = ""; });
+["dragover","dragenter"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave","drop"].forEach(ev => drop.addEventListener(ev, () => drop.classList.remove("over")));
+drop.addEventListener("drop", async e => { e.preventDefault(); await addPhotos([...e.dataTransfer.files]); });
+async function addPhotos(files){
+  if (!files.length) return;
+  drop.querySelector("b").textContent = "Загружаю…";
+  try { photos.push(...await uploadFiles(files)); }
+  catch(e){ alert(e.message); }
+  drop.querySelector("b").textContent = "Перетащите фото сюда";
+  renderThumbs(); save();
+}
+let dragI = null;
+$("#thumbs").addEventListener("click", e => { const x = e.target.closest("[data-x]"); if (x){ photos.splice(+x.dataset.x, 1); renderThumbs(); save(); } });
+$("#thumbs").addEventListener("dragstart", e => { const t = e.target.closest(".thumb"); if (t){ dragI = +t.dataset.i; t.classList.add("dragging"); } });
+$("#thumbs").addEventListener("dragend", () => { dragI = null; renderThumbs(); });
+$("#thumbs").addEventListener("dragover", e => e.preventDefault());
+$("#thumbs").addEventListener("drop", e => {
+  e.preventDefault(); e.stopPropagation();
+  const t = e.target.closest(".thumb"); if (dragI === null || !t) return;
+  const to = +t.dataset.i; const [m] = photos.splice(dragI, 1); photos.splice(to, 0, m);
+  dragI = null; renderThumbs(); save();
+});
+
+// ---------- услуги ----------
+function renderItems(){
+  if (!items.length) items.push({title:"", price:"", desc:"", cat:"", photo:""});
+  $("#items").innerHTML = items.map((it, i) => `<tr data-i="${i}">
+    <td style="width:52px"><div class="ph" data-ph="${i}" title="Фото позиции">${it.photo ? `<img src="${esc(it.photo)}" alt="">` : "+"}</div></td>
+    <td><input type="text" data-k="title" value="${esc(it.title)}" placeholder="Название"></td>
+    <td style="width:110px"><input type="text" data-k="price" value="${esc(it.price)}" placeholder="Цена"></td>
+    <td><input type="text" data-k="desc" value="${esc(it.desc)}" placeholder="Описание"></td>
+    <td style="width:120px"><input type="text" data-k="cat" value="${esc(it.cat)}" placeholder="Раздел"></td>
+    <td style="width:30px"><button class="del" data-del="${i}" title="Удалить">×</button></td></tr>`).join("");
+}
+$("#items").addEventListener("input", e => {
+  const tr = e.target.closest("tr"), k = e.target.dataset.k;
+  if (tr && k){ items[+tr.dataset.i][k] = e.target.value; save(); }
+});
+$("#items").addEventListener("click", e => {
+  const d = e.target.closest("[data-del]");
+  if (d){ items.splice(+d.dataset.del, 1); renderItems(); save(); return; }
+  const ph = e.target.closest("[data-ph]");
+  if (ph){
+    const i = +ph.dataset.ph;
+    if (items[i].photo && confirm("Убрать фото у этой позиции?")){ items[i].photo = ""; renderItems(); save(); return; }
+    const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*";
+    inp.onchange = async () => { const [u] = await uploadFiles([...inp.files]); if (u){ items[i].photo = u; renderItems(); save(); } };
+    inp.click();
+  }
+});
+$("#items").addEventListener("dragover", e => { const ph = e.target.closest("[data-ph]"); if (ph){ e.preventDefault(); ph.classList.add("over"); } });
+$("#items").addEventListener("dragleave", e => { const ph = e.target.closest("[data-ph]"); if (ph) ph.classList.remove("over"); });
+$("#items").addEventListener("drop", async e => {
+  const ph = e.target.closest("[data-ph]"); if (!ph) return;
+  e.preventDefault();
+  const i = +ph.dataset.ph;
+  if (e.dataTransfer.files.length){ const [u] = await uploadFiles([...e.dataTransfer.files]); if (u) items[i].photo = u; }
+  else if (dragI !== null){ items[i].photo = photos[dragI]; }    // перетащили фото из блока «Фото»
+  renderItems(); save();
+});
+$("#addRow").onclick = () => { items.push({title:"", price:"", desc:"", cat:(items[items.length-1]||{}).cat || "", photo:""}); renderItems(); save(); };
+$("#pasteBtn").onclick = () => { $("#paste").classList.add("on"); $("#pasteText").focus(); };
+$("#pasteCancel").onclick = () => $("#paste").classList.remove("on");
+$("#pasteOk").onclick = async () => {
+  const r = await api("/api/parse", {text: $("#pasteText").value});
+  items = items.filter(i => i.title.trim()).concat(r.items);
+  $("#pasteText").value = ""; $("#paste").classList.remove("on");
+  renderItems(); save();
+};
+
+// ---------- ВК ----------
+$("#vkBtn").onclick = async () => {
+  const url = $("#vkUrl").value.trim();
+  if (!url) return msg("#vkMsg", "Вставьте ссылку на группу", "warn");
+  msg("#vkMsg", '<span class="spin"></span>Смотрю группу и скачиваю фото…', "");
+  $("#vkBtn").disabled = true;
+  try {
+    await ensureJob();
+    const r = await api("/api/vk", {url, job});
+    FIELDS.forEach(k => { if (r.fields[k]) $("#f_"+k).value = r.fields[k]; });
+    if (r.photos.length) photos = r.photos.concat(photos.filter(p => !r.photos.includes(p)));
+    if (r.items.length) items = r.items;
+    if (r.template && !userPickedTemplate) $("#template").value = r.template;
+    renderThumbs(); renderItems(); save();
+    const parts = [`фото: ${r.photos.length}`, `товаров с ценами: ${r.items.length}`];
+    msg("#vkMsg", "Готово — " + parts.join(", ") + "." + (r.items.length ? "" : " Цен в группе нет — впишите их ниже.") +
+        (r.notes.length ? `<br><small>${esc(r.notes.join("; "))}</small>` : ""), r.items.length ? "ok" : "warn");
+  } catch(e){ msg("#vkMsg", esc(e.message), "err"); }
+  $("#vkBtn").disabled = false;
+};
+
+// ---------- сборка ----------
+let statusT = null;
+function pollStatus(){
+  clearInterval(statusT);
+  statusT = setInterval(async () => {
+    const s = await api("/api/status").catch(() => null);
+    if (s && s.status) $("#result").querySelector(".st") && ($("#result").querySelector(".st").textContent = s.status);
+  }, 1200);
+}
+$("#buildBtn").onclick = async () => {
+  const fields = {}; FIELDS.forEach(k => fields[k] = $("#f_"+k).value.trim());
+  if (!fields.name) { msg("#buildMsg", "Впишите название компании", "warn"); $("#f_name").focus(); return; }
+  msg("#buildMsg", "");
+  $("#buildBtn").disabled = true;
+  $("#result").innerHTML = '<div class="empty"><span class="spin"></span><span class="st">Собираю сайт…</span><br><small class="hint">Первый раз — до пары минут: бот скачивает образец и модуль для скриншотов.</small></div>';
+  pollStatus();
+  try {
+    const info = await api("/api/build", {template: $("#template").value, fields, items: items.filter(i => (i.title||"").trim()), photos});
+    current = info; tab = "pc"; showResult(); loadHistory();
+  } catch(e){
+    $("#result").innerHTML = `<div class="msg err">${esc(e.message)}</div>`;
+  }
+  clearInterval(statusT);
+  $("#buildBtn").disabled = false;
+};
+function showResult(){
+  const info = current; if (!info) return;
+  const base = `/sites/${encodeURIComponent(info.slug)}/`;
+  const shots = (info.shots || []).filter(f => f.startsWith(tab + "-"));
+  const v = Date.now();
+  $("#result").innerHTML = `
+    <h2 style="margin-bottom:4px">${esc(info.name)}</h2>
+    <p class="hint" style="margin:0 0 12px">${esc(info.template_title || info.template)} · ${esc(info.created || "")}</p>
+    <div class="tabs"><button data-tab="pc" class="${tab==="pc"?"on":""}">Компьютер</button><button data-tab="phone" class="${tab==="phone"?"on":""}">Телефон</button></div>
+    <div class="shots ${tab}">${shots.map(f => `<a href="${base}screens/${f}?v=${v}" target="_blank"><img src="${base}screens/${f}?v=${v}" alt="${f}" loading="lazy"></a>`).join("") || '<p class="hint">Скриншотов нет — нажмите «Переснять».</p>'}</div>
+    <div class="actions">
+      <button class="btn primary" data-act="folder">Открыть папку со скриншотами</button>
+      <a class="btn" href="${base}${esc(info.page || "index.html")}" target="_blank">Открыть сайт</a>
+      <button class="btn" data-act="edit">Изменить</button>
+      <button class="btn" data-act="reshoot">Переснять</button>
+      <button class="btn" data-act="delete" style="margin-left:auto">Удалить</button>
+    </div>
+    <p class="hint">Отправьте клиенту первые экраны с компьютера и телефона — этого обычно хватает. Остальные кусочки — если попросит «покажите всё».</p>`;
+}
+$("#result").addEventListener("click", async e => {
+  const t = e.target.closest("[data-tab]");
+  if (t){ tab = t.dataset.tab; showResult(); return; }
+  const a = e.target.closest("[data-act]"); if (!a || !current) return;
+  const act = a.dataset.act;
+  try {
+    if (act === "folder") await api("/api/open", {slug: current.slug});
+    if (act === "reshoot"){ a.disabled = true; a.textContent = "Снимаю…"; current = await api("/api/reshoot", {slug: current.slug}); showResult(); }
+    if (act === "edit") editFrom(current);
+    if (act === "delete" && confirm("Удалить этот демо-сайт и его скриншоты?")){ await api("/api/delete", {slug: current.slug}); current = null; $("#result").innerHTML = '<div class="empty">Удалено.</div>'; loadHistory(); }
+  } catch(err){ alert(err.message); }
+});
+function editFrom(info){
+  FIELDS.forEach(k => $("#f_"+k).value = (info.fields||{})[k] || "");
+  photos = (info.photos || []).slice(); items = (info.items || []).map(x => Object.assign({}, x));
+  $("#template").value = info.template; userPickedTemplate = true;
+  renderThumbs(); renderItems(); save();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+// ---------- история ----------
+let hist = [];
+async function loadHistory(){
+  hist = await api("/api/history").catch(() => []);
+  $("#hist").innerHTML = hist.length ? hist.map((h, i) => `<button data-h="${i}" class="${current && current.slug===h.slug ? "on" : ""}">${esc(h.name)}<small>${esc(h.created)} · ${esc((h.template_title||"").split(" (")[0])}</small></button>`).join("")
+    : '<p class="hint" style="padding:0 8px">Пока пусто</p>';
+}
+$("#hist").addEventListener("click", e => { const b = e.target.closest("[data-h]"); if (b){ current = hist[+b.dataset.h]; tab = "pc"; showResult(); loadHistory(); } });
+$("#newBtn").onclick = () => {
+  if (!confirm("Очистить форму и начать новый сайт?")) return;
+  job = ""; photos = []; items = []; userPickedTemplate = false;
+  FIELDS.forEach(k => $("#f_"+k).value = ""); $("#vkUrl").value = "";
+  msg("#vkMsg", ""); msg("#buildMsg", "");
+  renderThumbs(); renderItems(); save();
+};
+document.addEventListener("input", e => { if (e.target.id && e.target.id.startsWith("f_")) save(); });
+
+(async () => {
+  await loadTemplates();
+  load();
+  renderThumbs(); renderItems(); loadHistory();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+# Личное — никогда не попадает на GitHub
+.env
+data/
+sites/
+# Временное
+__pycache__/
+.pytest_cache/
+*.new
