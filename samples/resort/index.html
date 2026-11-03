@@ -131,6 +131,18 @@ section{padding:80px 0}
 .modal .nx{right:20px;top:50%;transform:translateY(-50%)}
 .modal .cap{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#ddd;font:500 14px var(--head)}
 .ph{width:100%;height:100%;background:#ddd8d0}
+
+/* декор: веточки, веник, дерево */
+#houses,#about,#gallery,#book{overflow:hidden}
+section{position:relative}
+.deco{position:absolute;pointer-events:none;user-select:none;z-index:0;filter:drop-shadow(0 6px 10px rgba(0,0,0,.12))}
+section > .wrap{position:relative;z-index:1}
+.wood{background:linear-gradient(rgba(247,243,236,.84),rgba(247,243,236,.84)),url(decor/wood.jpg) center/900px auto repeat}
+.d-houses{width:420px;right:-110px;top:34px;transform:rotate(-8deg)}
+.d-about{width:230px;right:-30px;top:-60px;transform:rotate(8deg)}
+.d-gallery{width:300px;left:-60px;top:6px;transform:scaleX(-1) rotate(-4deg)}
+.d-book{width:250px;left:calc(50% - 600px + 10px);bottom:40px;transform:rotate(-14deg)}
+.gallery h2{text-align:right}
 </style>
 </head>
 <body>
@@ -150,12 +162,12 @@ section{padding:80px 0}
   <div class="dots" id="dots"></div>
 </section>
 
-<section id="houses"><div class="wrap">
+<section id="houses"><img class="deco d-houses" src="decor/branch-long.png" alt=""><div class="wrap">
   <h2 id="housesTitle">Наши дома и бани</h2>
   <div class="cards" id="cards"></div>
 </div></section>
 
-<section class="about" id="about"><div class="wrap about-in">
+<section class="about wood" id="about"><img class="deco d-about" src="decor/branch-hang.png" alt=""><div class="wrap about-in">
   <div><h2>О нас</h2><div id="aboutText"></div><a class="btn btn-line" href="#book">Забронировать</a></div>
   <div class="about-photo" id="aboutPhoto"></div>
 </div></section>
@@ -165,12 +177,12 @@ section{padding:80px 0}
   <div class="perks" id="perks"></div>
 </div></section>
 
-<section class="gallery" id="gallery"><div class="wrap">
+<section class="gallery" id="gallery"><img class="deco d-gallery" src="decor/branch-long.png" alt=""><div class="wrap">
   <h2>Галерея</h2>
   <div class="g-grid" id="gGrid"></div>
 </div></section>
 
-<section class="book" id="book"><div class="wrap book-in">
+<section class="book wood" id="book"><img class="deco d-book" src="decor/venik.png" alt=""><div class="wrap book-in">
   <div class="book-text"><h2>Бронирование</h2>
     <p>Оставьте заявку — мы свяжемся с вами, подтвердим свободные даты и расскажем, как добраться.</p>
     <div class="book-contacts" id="bookContacts"></div></div>
