@@ -392,7 +392,6 @@ function showResult(){
   $("#result").innerHTML = `
     <h2 style="margin-bottom:4px">${esc(info.name)}</h2>
     <p class="hint" style="margin:0 0 12px">${esc(info.template_title || info.template)} · ${esc(info.created || "")}</p>
-    <div class="tabs"><button data-tab="pc" class="${tab==="pc"?"on":""}">Компьютер</button><button data-tab="phone" class="${tab==="phone"?"on":""}">Телефон</button></div>
     <div class="shots ${tab}">${shots.map(f => `<a href="${base}screens/${f}?v=${v}" target="_blank"><img src="${base}screens/${f}?v=${v}" alt="${f}" loading="lazy"></a>`).join("") || '<p class="hint">Скриншотов нет — нажмите «Переснять».</p>'}</div>
     <div class="actions">
       <button class="btn primary" data-act="folder">Открыть папку со скриншотами</button>
@@ -401,7 +400,7 @@ function showResult(){
       <button class="btn" data-act="reshoot">Переснять</button>
       <button class="btn" data-act="delete" style="margin-left:auto">Удалить</button>
     </div>
-    <p class="hint">Отправьте клиенту первые экраны с компьютера и телефона — этого обычно хватает. Остальные кусочки — если попросит «покажите всё».</p>`;
+    <p class="hint">Скриншоты — для проверки. Клиенту удобнее отправить свои скриншоты: нажмите «Открыть сайт» и снимите экран.</p>`;
 }
 $("#result").addEventListener("click", async e => {
   const t = e.target.closest("[data-tab]");

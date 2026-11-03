@@ -6,400 +6,307 @@
 <title>Загородный дом и баня</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#f5efe6; --paper2:#ece3d6; --ink:#1d1a16; --ink-soft:#5f574c; --line:rgba(29,26,22,.14);
-  --wood:#a9733d; --wood-soft:#d8b48a; --pine:#1f2b24; --pine2:#2b3a30; --white:#fffdf9;
-  --serif:'Cormorant Garamond',Georgia,serif; --sans:'Manrope',system-ui,sans-serif;
-  --r:18px; --wrap:1200px;
+  --text:#222; --muted:#6b6b6b; --line:#e4e1dc; --bg:#fff; --bg2:#f5f3ef;
+  --accent:#8b5e34; --accent-d:#714a27; --dark:#1e1e1e;
+  --head:'Montserrat',Arial,sans-serif; --body:'Open Sans',Arial,sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--paper);color:var(--ink);font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font:15px/1.6 var(--body)}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
-.wrap{max-width:var(--wrap);margin:0 auto;padding:0 28px}
-.eyebrow{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--wood);font-weight:600}
-h2.title{font-family:var(--serif);font-weight:500;font-size:clamp(40px,5.2vw,68px);line-height:1.02;letter-spacing:-.01em;margin-top:14px}
-.lead{font-size:18px;color:var(--ink-soft);max-width:600px;margin-top:18px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 30px;border-radius:999px;font-weight:600;font-size:15px;letter-spacing:.02em;cursor:pointer;border:1.5px solid transparent;transition:.25s}
-.btn-wood{background:var(--wood);color:#fff}
-.btn-wood:hover{background:#8f5f30;transform:translateY(-2px)}
-.btn-ghost{border-color:rgba(255,255,255,.6);color:#fff}
-.btn-ghost:hover{background:#fff;color:var(--ink)}
-.btn-dark{background:var(--pine);color:#fff}
-.btn-dark:hover{background:#000}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.02em;line-height:1.2}
+h2{font-size:30px;margin-bottom:34px}
+.btn{display:inline-block;font:600 13px var(--head);text-transform:uppercase;letter-spacing:.06em;padding:15px 30px;border-radius:4px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;transition:background .2s,color .2s}
+.btn:hover{background:var(--accent-d);border-color:var(--accent-d)}
+.btn-line{background:transparent;color:var(--accent)}
+.btn-line:hover{background:var(--accent);color:#fff}
+.btn-white{background:transparent;border-color:#fff;color:#fff}
+.btn-white:hover{background:#fff;color:var(--text)}
+section{padding:80px 0}
 
 /* шапка */
-.header{position:fixed;inset:0 0 auto 0;z-index:40;transition:background .3s,box-shadow .3s}
-.header.solid{background:rgba(245,239,230,.94);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line)}
-.header-in{display:flex;align-items:center;justify-content:space-between;gap:24px;height:78px}
-.brand{display:flex;align-items:center;gap:12px;color:#fff;font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:.02em;white-space:nowrap}
-.header.solid .brand{color:var(--ink)}
-.brand img{height:54px;width:54px;object-fit:cover;object-position:50% 34%;border-radius:50%;background:#fff}
-.nav{display:flex;gap:30px;font-size:14px;font-weight:500;color:rgba(255,255,255,.88)}
-.header.solid .nav{color:var(--ink-soft)}
-.nav a:hover{color:var(--wood)}
-.header .btn{padding:12px 22px;font-size:14px}
+.top{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:32px;height:84px}
+.logo{display:flex;align-items:center;gap:12px;font:700 17px var(--head);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.logo img{height:68px;width:auto}
+.menu{display:flex;gap:28px;margin-left:auto;font:500 14px var(--head)}
+.menu a:hover{color:var(--accent)}
+.top-right{display:flex;align-items:center;gap:18px}
+.top-phone{font:600 15px var(--head);white-space:nowrap}
+.vk{width:38px;height:38px;border-radius:50%;background:var(--bg2);display:grid;place-items:center;color:var(--text)}
+.vk:hover{background:var(--accent);color:#fff}
+.vk svg{width:20px;height:20px}
+.top .btn{padding:12px 22px}
 
 /* первый экран */
-.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:var(--pine)}
-.hero-bg{position:absolute;inset:0}
-.hero-bg img{width:100%;height:100%;object-fit:cover;transform:scale(1.04)}
-.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,20,17,.55) 0%,rgba(16,20,17,.15) 35%,rgba(16,20,17,.82) 100%)}
-.hero .hero-in{position:relative;width:100%;padding-top:130px;padding-bottom:64px}
-.hero .eyebrow{color:var(--wood-soft)}
-.hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(54px,8.4vw,128px);line-height:.95;letter-spacing:-.015em;margin:18px 0 0;max-width:1100px}
-.hero h1 em{font-style:italic;color:var(--wood-soft)}
-.hero p.sub{font-size:19px;max-width:560px;margin-top:22px;color:rgba(255,255,255,.86)}
-.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
-.hero-facts{display:flex;flex-wrap:wrap;gap:0;margin-top:56px;border-top:1px solid rgba(255,255,255,.22)}
-.fact{padding:22px 34px 0 0;margin-right:34px;min-width:180px}
-.fact b{display:block;font-family:var(--serif);font-size:30px;font-weight:500}
-.fact span{font-size:13px;color:rgba(255,255,255,.72);letter-spacing:.04em}
+.hero{position:relative;height:620px;color:#fff;padding:0;background:#333;overflow:hidden}
+.hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 1s}
+.hero-slide.on{opacity:1}
+.hero-slide img{width:100%;height:100%;object-fit:cover}
+.hero::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.38)}
+.hero-in{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center}
+.hero h1{font-size:44px;max-width:760px}
+.hero p{font-size:18px;margin-top:16px;max-width:560px;opacity:.95}
+.hero-btns{display:flex;gap:14px;margin-top:34px}
+.dots{position:absolute;z-index:3;left:50%;bottom:26px;transform:translateX(-50%);display:flex;gap:8px}
+.dots button{width:10px;height:10px;border-radius:50%;border:0;background:rgba(255,255,255,.5);cursor:pointer}
+.dots button.on{background:#fff}
 
-/* о месте */
-.intro{padding:130px 0 110px}
-.intro-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:70px;align-items:center}
-.intro-text .intro-quote{color:var(--ink);font-family:var(--serif);font-size:clamp(30px,3.4vw,46px);line-height:1.15;margin-top:16px}
-.intro-quote em{color:var(--wood)}
-.intro-text p{color:var(--ink-soft);font-size:17px;margin-top:20px;max-width:520px}
-.collage{position:relative;height:560px}
-.collage figure{position:absolute;overflow:hidden;border-radius:var(--r);box-shadow:0 30px 60px -30px rgba(0,0,0,.45);cursor:zoom-in}
-.collage figure img{width:100%;height:100%;object-fit:cover}
-.collage .c1{inset:0 22% 18% 0}
-.collage .c2{width:46%;height:46%;right:0;bottom:0;border:8px solid var(--paper)}
-.badge-loc{position:absolute;left:24px;bottom:24px;background:rgba(245,239,230,.95);padding:12px 18px;border-radius:999px;font-size:13px;font-weight:600;display:flex;gap:8px;align-items:center;box-shadow:0 10px 30px -10px rgba(0,0,0,.35)}
+/* карточки */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:30px}
+.card{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+.card-photo{position:relative;aspect-ratio:3/2;background:var(--bg2);cursor:pointer}
+.card-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card-photo .n{position:absolute;right:12px;bottom:12px;background:rgba(0,0,0,.6);color:#fff;font:600 12px var(--head);padding:4px 10px;border-radius:3px}
+.card-body{padding:24px 26px 26px;display:flex;flex-direction:column;flex:1}
+.card h3{font-size:19px}
+.card-price{font:700 22px var(--head);color:var(--accent);margin-top:12px}
+.card-price small{font:500 14px var(--body);color:var(--muted)}
+.card ul{list-style:none;margin:16px 0 22px;color:var(--muted);font-size:14px}
+.card li{padding:6px 0;border-bottom:1px solid var(--line)}
+.card li:last-child{border-bottom:0}
+.card-btns{display:flex;gap:12px;margin-top:auto}
+.card-btns .btn{flex:1;text-align:center;padding:13px 10px}
 
-/* объекты */
-.stays{padding:110px 0 120px;background:var(--pine);color:var(--white)}
-.stays .lead{color:rgba(255,255,255,.7)}
-.stays-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap}
-.stay{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;margin-top:84px}
-.stay:nth-child(even){grid-template-columns:.85fr 1.15fr}
-.stay:nth-child(even) .slider{order:2}
-.slider{position:relative}
-.slide-main{position:relative;aspect-ratio:4/3;border-radius:var(--r);overflow:hidden;background:var(--pine2);cursor:zoom-in}
-.slide-main img{width:100%;height:100%;object-fit:cover;transition:opacity .35s}
-.slide-count{position:absolute;right:16px;top:16px;background:rgba(0,0,0,.55);padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.06em}
-.arrow{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:0;background:rgba(245,239,230,.92);color:var(--ink);font-size:20px;cursor:pointer;display:grid;place-items:center;transition:.2s}
-.arrow:hover{background:#fff}
-.arrow.prev{left:16px}.arrow.next{right:16px}
-.thumbs{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px}
-.thumbs button{border:0;padding:0;aspect-ratio:1/1;border-radius:10px;overflow:hidden;opacity:.5;cursor:pointer;background:var(--pine2);transition:.2s}
-.thumbs button.on,.thumbs button:hover{opacity:1}
-.thumbs img{width:100%;height:100%;object-fit:cover}
-.stay-body .eyebrow{color:var(--wood-soft)}
-.stay-body h3{font-family:var(--serif);font-weight:500;font-size:clamp(34px,3.6vw,52px);line-height:1.04;margin-top:12px}
-.price{display:inline-flex;align-items:baseline;gap:8px;margin-top:22px;padding:12px 20px;border:1px solid rgba(216,180,138,.45);border-radius:14px}
-.price b{font-family:var(--serif);font-size:34px;font-weight:600;color:var(--wood-soft)}
-.price span{font-size:13px;color:rgba(255,255,255,.66)}
-.feats{list-style:none;margin-top:26px;display:grid;gap:12px}
-.feats li{display:flex;gap:12px;align-items:flex-start;color:rgba(255,255,255,.86)}
-.feats li::before{content:'';flex:none;width:18px;height:18px;margin-top:4px;border-radius:50%;background:radial-gradient(circle,var(--wood-soft) 0 3px,transparent 4px),rgba(216,180,138,.18)}
-.stay-body .btn{margin-top:32px}
+/* о нас */
+.about{background:var(--bg2)}
+.about-in{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.about h2{margin-bottom:22px}
+.about p{color:#444;margin-bottom:14px;font-size:16px}
+.about-photo{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:4/3}
+.about-photo img{position:absolute;inset:0}
+.about-photo img{width:100%;height:100%;object-fit:cover}
+.about .btn{margin-top:10px}
 
-/* преимущества */
-.perks{padding:120px 0}
-.perks-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:56px}
-.perk{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:30px 26px 32px}
-.perk svg{width:44px;height:44px;color:var(--wood)}
-.perk h4{font-family:var(--serif);font-size:26px;font-weight:600;margin-top:18px;line-height:1.1}
-.perk p{color:var(--ink-soft);font-size:15px;margin-top:10px}
+/* удобства */
+.perks{display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
+.perk svg{width:40px;height:40px;color:var(--accent)}
+.perk b{display:block;font:600 15px var(--head);text-transform:uppercase;margin-top:14px}
+.perk p{color:var(--muted);font-size:14px;margin-top:6px}
 
 /* галерея */
-.gallery{padding:0 0 120px}
-.g-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:240px;gap:14px;margin-top:50px}
-.g-grid figure{overflow:hidden;border-radius:14px;cursor:zoom-in;background:var(--paper2)}
-.g-grid figure:nth-child(6n+1){grid-column:span 2;grid-row:span 2}
-.g-grid.many figure:nth-child(6n+4){grid-row:span 2}
-.g-grid.n4 figure:nth-child(4){grid-column:span 2}
-.g-grid.n3 figure:nth-child(3){grid-column:span 2}
-.intro-logo{width:150px;height:150px;object-fit:contain;mix-blend-mode:multiply;margin:-10px 0 18px -14px}
-.g-grid img{width:100%;height:100%;object-fit:cover;transition:transform .7s}
-.g-grid figure:hover img{transform:scale(1.05)}
+.gallery{padding-top:0}
+.g-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.g-grid figure{position:relative;aspect-ratio:1/1;overflow:hidden;border-radius:4px;cursor:pointer;background:var(--bg2)}
+.g-grid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .2s}
+.g-grid figure:hover img{opacity:.85}
 
 /* бронирование */
-.booking{position:relative;padding:120px 0;color:#fff;overflow:hidden;background:var(--pine)}
-.booking-bg{position:absolute;inset:0}
-.booking-bg img{width:100%;height:100%;object-fit:cover}
-.booking-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,20,17,.9) 0%,rgba(16,20,17,.55) 100%)}
-.booking-in{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.booking .lead{color:rgba(255,255,255,.78)}
-.form{background:var(--paper);color:var(--ink);border-radius:22px;padding:34px;box-shadow:0 40px 80px -30px rgba(0,0,0,.6)}
-.form h3{font-family:var(--serif);font-size:32px;font-weight:600}
-.form .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-.form label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
-.form input,.form select{font:500 15px var(--sans);padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);text-transform:none;letter-spacing:0}
-.form .full{grid-column:1/-1}
-.form input,.form select{width:100%;min-width:0;max-width:100%}
-.form label,.booking-in>*{min-width:0}
-.form .btn{width:100%;margin-top:20px}
-.form small{display:block;margin-top:12px;color:var(--ink-soft);font-size:12px}
-.form .ok{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;background:#e5efe5;color:#25543a;font-weight:600}
+.book{background:var(--bg2)}
+.book-in{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.book h2{margin-bottom:18px}
+.book-text p{color:#444;font-size:16px}
+.book-contacts{margin-top:26px;display:grid;gap:10px;font:600 16px var(--head)}
+.book-contacts a:hover{color:var(--accent)}
+.form{background:#fff;border-radius:6px;padding:30px;border:1px solid var(--line)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.form input,.form select{width:100%;font:15px var(--body);padding:12px 14px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--text)}
+.form input:focus,.form select:focus{outline:none;border-color:var(--accent)}
+.form .one{margin-bottom:14px}
+.form .btn{width:100%;margin-top:6px}
+.form small{display:block;color:var(--muted);font-size:12px;margin-top:12px}
+.form .ok{display:none;margin-top:12px;color:#2d6a3e;font-weight:600}
 
-/* контакты */
-.contacts{padding:110px 0}
-.c-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:46px}
-.c-card{border-top:1px solid var(--line);padding-top:22px}
-.c-card span{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--wood);font-weight:600}
-.c-card b{display:block;font-family:var(--serif);font-size:28px;font-weight:600;margin-top:8px;line-height:1.15}
-.c-card a:hover{color:var(--wood)}
-.footer{background:var(--pine);color:rgba(255,255,255,.7);padding:46px 0;font-size:14px}
-.footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
-.footer .brand{color:#fff}
+/* контакты и подвал */
+.contacts-in{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+.contacts-in span{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.contacts-in b{font:600 17px var(--head)}
+.contacts-in a:hover{color:var(--accent)}
+.foot{background:var(--dark);color:#bbb;padding:34px 0;font-size:14px}
+.foot .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 
-/* просмотр фото */
-.lb{position:fixed;inset:0;z-index:100;background:rgba(10,10,10,.92);display:none;align-items:center;justify-content:center;padding:30px}
-.lb.on{display:flex}
-.lb img{max-width:100%;max-height:100%;border-radius:10px}
-.lb button{position:absolute;top:18px;right:22px;width:46px;height:46px;border-radius:50%;border:0;background:#fff;font-size:24px;cursor:pointer}
-
-.ph{width:100%;height:100%;background:linear-gradient(135deg,#3a4a3f,#26322b);display:grid;place-items:center;color:rgba(255,255,255,.45);font-family:var(--serif);font-size:22px}
-
-@media(max-width:980px){
-  .nav{display:none}
-  .intro-grid,.stay,.stay:nth-child(even),.booking-in{grid-template-columns:1fr}
-  .stay:nth-child(even) .slider{order:0}
-  .perks-grid{grid-template-columns:1fr 1fr}
-  .g-grid{grid-template-columns:1fr 1fr;grid-auto-rows:180px}
-  .collage{height:440px}
-  .c-grid{grid-template-columns:1fr}
-}
-@media(max-width:600px){
-  .wrap{padding:0 18px}
-  .header-in{height:66px}
-  .brand{font-size:19px}.brand img{height:42px;width:42px}
-  .header .btn{padding:10px 16px;font-size:13px}
-  .hero .hero-in{padding-top:96px;padding-bottom:40px}
-  .hero p.sub{font-size:16px}
-  .fact{min-width:0;flex:1 1 40%;margin-right:12px;padding-right:0}
-  .fact b{font-size:24px}
-  .intro,.stays,.perks,.booking,.contacts{padding:76px 0}
-  .stay{margin-top:56px;gap:26px}
-  .perks-grid{grid-template-columns:1fr}
-  .g-grid{grid-auto-rows:140px;gap:8px}
-  .form{padding:24px}.form .row{grid-template-columns:1fr}
-  .collage{height:360px}
-  .thumbs{grid-template-columns:repeat(4,1fr)}
-}
+/* окно с фото */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center}
+.modal.on{display:flex}
+.modal img{max-width:88vw;max-height:84vh;border-radius:4px}
+.modal .x,.modal .pv,.modal .nx{position:absolute;background:none;border:0;color:#fff;cursor:pointer;font-size:40px;line-height:1;padding:10px 18px}
+.modal .x{top:16px;right:20px}
+.modal .pv{left:20px;top:50%;transform:translateY(-50%)}
+.modal .nx{right:20px;top:50%;transform:translateY(-50%)}
+.modal .cap{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#ddd;font:500 14px var(--head)}
+.ph{width:100%;height:100%;background:#ddd8d0}
 </style>
 </head>
 <body>
-<header class="header" id="header"><div class="wrap header-in">
-  <a class="brand" href="#top" id="brand"></a>
-  <nav class="nav"><a href="#stays">Дом и баня</a><a href="#perks">Отдых</a><a href="#gallery">Фото</a><a href="#contacts">Контакты</a></nav>
-  <a class="btn btn-wood" href="#booking">Забронировать</a>
+<header class="top"><div class="wrap top-in">
+  <a class="logo" href="#top" id="logo"></a>
+  <nav class="menu"><a href="#about">О нас</a><a href="#houses">Дом и баня</a><a href="#houses">Цены</a><a href="#gallery">Галерея</a><a href="#contacts">Контакты</a></nav>
+  <div class="top-right" id="topRight"></div>
 </div></header>
 
-<main id="top">
-  <section class="hero">
-    <div class="hero-bg" id="heroBg"></div>
-    <div class="wrap hero-in">
-      <p class="eyebrow" id="heroEyebrow"></p>
-      <h1 id="heroTitle"></h1>
-      <p class="sub" id="heroSub"></p>
-      <div class="hero-cta"><a class="btn btn-wood" href="#booking">Забронировать даты</a><a class="btn btn-ghost" href="#stays">Смотреть дом и баню</a></div>
-      <div class="hero-facts" id="heroFacts"></div>
-    </div>
-  </section>
+<section class="hero" id="top">
+  <div id="slides"></div>
+  <div class="wrap hero-in">
+    <h1 id="h1"></h1>
+    <p id="heroText"></p>
+    <div class="hero-btns"><a class="btn" href="#book">Бронировать</a><a class="btn btn-white" href="#houses">Цены</a></div>
+  </div>
+  <div class="dots" id="dots"></div>
+</section>
 
-  <section class="intro"><div class="wrap intro-grid">
-    <div class="intro-text">
-      <img class="intro-logo" id="introLogo" alt="" hidden>
-      <p class="eyebrow">О месте</p>
-      <p class="intro-quote" id="introQuote"></p>
-      <p id="introText"></p>
-    </div>
-    <div class="collage" id="collage"></div>
-  </div></section>
+<section id="houses"><div class="wrap">
+  <h2 id="housesTitle">Наши дома и бани</h2>
+  <div class="cards" id="cards"></div>
+</div></section>
 
-  <section class="stays" id="stays"><div class="wrap">
-    <div class="stays-head"><div><p class="eyebrow" style="color:var(--wood-soft)">Где отдыхать</p><h2 class="title">Дом и баня</h2></div>
-      <p class="lead">Всё в одном месте: уютный дом для ночёвки и настоящая баня на дровах — приезжайте семьёй или компанией.</p></div>
-    <div id="stayList"></div>
-  </div></section>
+<section class="about" id="about"><div class="wrap about-in">
+  <div><h2>О нас</h2><div id="aboutText"></div><a class="btn btn-line" href="#book">Забронировать</a></div>
+  <div class="about-photo" id="aboutPhoto"></div>
+</div></section>
 
-  <section class="perks" id="perks"><div class="wrap">
-    <p class="eyebrow">Почему здесь хорошо</p>
-    <h2 class="title">Отдых, который <em style="font-style:italic;color:var(--wood)">перезагружает</em></h2>
-    <div class="perks-grid" id="perkGrid"></div>
-  </div></section>
+<section><div class="wrap">
+  <h2>Что вас ждёт</h2>
+  <div class="perks" id="perks"></div>
+</div></section>
 
-  <section class="gallery" id="gallery"><div class="wrap">
-    <p class="eyebrow">Фото</p>
-    <h2 class="title">Как здесь внутри</h2>
-    <div class="g-grid" id="gGrid"></div>
-  </div></section>
+<section class="gallery" id="gallery"><div class="wrap">
+  <h2>Галерея</h2>
+  <div class="g-grid" id="gGrid"></div>
+</div></section>
 
-  <section class="booking" id="booking">
-    <div class="booking-bg" id="bookBg"></div>
-    <div class="wrap booking-in">
-      <div><p class="eyebrow" style="color:var(--wood-soft)">Бронирование</p>
-        <h2 class="title">Выберите даты — остальное мы подготовим</h2>
-        <p class="lead">Оставьте заявку: перезвоним, подтвердим свободные даты и расскажем, как добраться.</p></div>
-      <form class="form" id="bookForm" onsubmit="return false">
-        <h3>Быстрое бронирование</h3>
-        <div class="row">
-          <label>Заезд<input type="date"></label>
-          <label>Выезд<input type="date"></label>
-          <label class="full">Что бронируем<select id="bookWhat"></select></label>
-          <label>Гостей<input type="number" min="1" value="4"></label>
-          <label>Телефон<input type="tel" placeholder="+7 (___) ___-__-__"></label>
-          <label class="full">Ваше имя<input type="text" placeholder="Как к вам обращаться"></label>
-        </div>
-        <button class="btn btn-dark">Отправить заявку</button>
-        <div class="ok" id="bookOk">Спасибо! Мы скоро свяжемся с вами.</div>
-        <small>Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</small>
-      </form>
-    </div>
-  </section>
+<section class="book" id="book"><div class="wrap book-in">
+  <div class="book-text"><h2>Бронирование</h2>
+    <p>Оставьте заявку — мы свяжемся с вами, подтвердим свободные даты и расскажем, как добраться.</p>
+    <div class="book-contacts" id="bookContacts"></div></div>
+  <form class="form" id="form" onsubmit="return false">
+    <div class="one"><label>Что бронируем</label><select id="what"></select></div>
+    <div class="form-row"><div><label>Дата заезда</label><input type="date"></div><div><label>Дата выезда</label><input type="date"></div></div>
+    <div class="form-row"><div><label>Ваше имя</label><input type="text"></div><div><label>Телефон</label><input type="tel"></div></div>
+    <button class="btn">Отправить заявку</button>
+    <div class="ok" id="ok">Спасибо! Мы скоро свяжемся с вами.</div>
+    <small>Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</small>
+  </form>
+</div></section>
 
-  <section class="contacts" id="contacts"><div class="wrap">
-    <p class="eyebrow">Контакты</p>
-    <h2 class="title">Ждём в гости</h2>
-    <div class="c-grid" id="cGrid"></div>
-  </div></section>
-</main>
+<section id="contacts"><div class="wrap">
+  <h2>Контакты</h2>
+  <div class="contacts-in" id="contactsIn"></div>
+</div></section>
 
-<footer class="footer"><div class="wrap"><span class="brand" id="footBrand"></span><span id="footNote"></span></div></footer>
-<div class="lb" id="lb"><button aria-label="Закрыть">×</button><img alt=""></div>
+<footer class="foot"><div class="wrap"><span id="footL"></span><span id="footR"></span></div></footer>
+<div class="modal" id="modal"><button class="x" aria-label="Закрыть">×</button><button class="pv" aria-label="Назад">‹</button><img alt=""><button class="nx" aria-label="Вперёд">›</button><div class="cap"></div></div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   var D = window.__DEMO__ || {}, V = D.v || {};
-  var DEF = {
-    name: "Лесная усадьба", tagline: "горы | тишина | перезагрузка",
-    about1: "Дом и баня в сосновом лесу — место, где можно выключить телефон и наконец выспаться.",
-    about2: "Утром — кофе на террасе, днём — прогулка по лесу, вечером — пар на дровах и долгий ужин за большим столом."
-  };
-  var name = V.name || DEF.name, tagline = V.tagline || DEF.tagline;
+  var name = V.name || "Загородный дом";
+  var tagline = V.tagline || "";
   var items = (D.items && D.items.length) ? D.items : [
-    {title: "Дом в стиле барнхаус", price: "от 10 000 ₽", desc: "Гостиная с диваном; Уютные спальни; Кухня и большой обеденный стол; Терраса с видом на лес", photos: []},
-    {title: "Баня на дровах", price: "по запросу", desc: "Парная на дровах; Душевая; Комната отдыха; Чай и полотенца", photos: []}
+    {title: "Дом для отдыха", price: "", desc: "Гостиная; Спальни; Кухня; Терраса", photos: []},
+    {title: "Баня на дровах", price: "", desc: "Парная; Душевая; Комната отдыха", photos: []}
   ];
+  items.forEach(function (it) { it.photos = it.photos && it.photos.length ? it.photos : (it.photo ? [it.photo] : []); });
   var gallery = (D.gallery || []).slice();
-  var all = [];
-  items.forEach(function (it) { (it.photos && it.photos.length ? it.photos : (it.photo ? [it.photo] : [])).forEach(function (p) { all.push(p); }); });
-  var heroPhoto = (items[0] && ((items[0].photos || [])[0] || items[0].photo)) || (D.photos && D.photos.hero) || gallery[0] || "";
   var $ = function (id) { return document.getElementById(id); };
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]; }); }
-  function img(src, alt) { return src ? '<img src="' + esc(src) + '" alt="' + esc(alt || "") + '">' : '<div class="ph">' + esc(name) + '</div>'; }
+  function img(src, alt) { return src ? '<img src="' + esc(src) + '" alt="' + esc(alt || "") + '">' : '<div class="ph"></div>'; }
+  var phone = V.phone && V.phone !== "+7 (900) 000-00-00" ? V.phone : "";
+  var vkIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.8 17.5c-5.5 0-8.6-3.8-8.7-10h2.8c.1 4.6 2.1 6.5 3.7 6.9V7.5h2.6v3.9c1.6-.2 3.3-2 3.8-3.9h2.6c-.4 2.4-2.2 4.2-3.4 4.9 1.2.6 3.2 2.1 3.9 5.1h-2.9c-.6-1.9-2.1-3.3-4-3.5v3.5h-.4z"/></svg>';
 
-  document.title = name + " — " + tagline.replace(/\s*\|\s*/g, " · ");
-  var brandHTML = (V.logo ? '<img src="' + esc(V.logo) + '" alt="">' : "") + "<span>" + esc(name) + "</span>";
-  $("brand").innerHTML = brandHTML; $("footBrand").innerHTML = brandHTML;
+  document.title = name + (tagline ? " — " + tagline.replace(/\s*\|\s*/g, ", ") : "");
+  $("logo").innerHTML = V.logo ? '<img src="' + esc(V.logo) + '" alt="' + esc(name) + '">' : esc(name);
+  $("topRight").innerHTML = (phone ? '<a class="top-phone" href="tel:' + esc(V.phone_href) + '">' + esc(phone) + '</a>' : "") +
+    (V.vk ? '<a class="vk" href="' + esc(V.vk) + '" target="_blank" aria-label="ВКонтакте">' + vkIcon + '</a>' : "") +
+    '<a class="btn" href="#book">Бронировать</a>';
 
-  // первый экран
-  $("heroBg").innerHTML = heroPhoto ? img(heroPhoto, name) : "";
-  var words = tagline.split("|").map(function (w) { return w.trim(); }).filter(Boolean);
-  if (words.length > 1) {
-    $("heroTitle").innerHTML = words.map(function (w, i) {
-      w = w.charAt(0).toUpperCase() + w.slice(1);
-      return i === words.length - 1 ? "<em>" + esc(w) + ".</em>" : esc(w) + ".";
-    }).join(" ");
-    $("heroEyebrow").textContent = name + (V.city_or_address ? " · " + V.city_or_address : "");
-  } else {
-    $("heroTitle").textContent = name;
-    $("heroEyebrow").textContent = tagline;
+  // первый экран: заголовок из названий объектов, ниже — слоган
+  var titles = items.map(function (it) { return it.title; });
+  var h1 = titles.length === 2 ? titles[0] + " и " + titles[1].charAt(0).toLowerCase() + titles[1].slice(1) : name;
+  $("h1").textContent = h1;
+  $("heroText").textContent = tagline ? tagline.split("|").map(function (s) { return s.trim(); }).join(" · ") : (V.about1 || "");
+  var heroPics = [];
+  items.forEach(function (it) { if (it.photos[0]) heroPics.push(it.photos[0]); });
+  gallery.forEach(function (g) { if (heroPics.length < 4 && heroPics.indexOf(g) < 0) heroPics.push(g); });
+  $("slides").innerHTML = heroPics.map(function (p, i) { return '<div class="hero-slide' + (i ? "" : " on") + '">' + img(p) + '</div>'; }).join("");
+  $("dots").innerHTML = heroPics.length > 1 ? heroPics.map(function (p, i) { return '<button class="' + (i ? "" : "on") + '" data-s="' + i + '"></button>'; }).join("") : "";
+  var cur = 0;
+  function show(n) {
+    var s = document.querySelectorAll(".hero-slide"), d = document.querySelectorAll(".dots button");
+    if (!s.length) return;
+    cur = (n + s.length) % s.length;
+    s.forEach(function (e, i) { e.classList.toggle("on", i === cur); });
+    d.forEach(function (e, i) { e.classList.toggle("on", i === cur); });
   }
-  $("heroSub").textContent = V.about1 || DEF.about1;
-  var facts = items.slice(0, 2).map(function (it) {
-    return '<div class="fact"><b>' + esc(it.price || "по запросу") + '</b><span>' + esc(it.title) + '</span></div>';
-  });
-  if (V.city || V.address) facts.push('<div class="fact"><b>' + esc(V.city || "") + '</b><span>' + esc(V.address && V.address !== V.city ? V.address : "наш адрес") + '</span></div>');
-  $("heroFacts").innerHTML = facts.join("");
+  if (heroPics.length > 1) setInterval(function () { show(cur + 1); }, 5000);
+  $("dots").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) show(+b.dataset.s); });
 
-  // о месте
-  $("introQuote").innerHTML = (/гор/i.test(tagline + (V.about1 || "")) ? "Здесь <em>горы, лес</em> и тишина" : "Здесь <em>лес</em> и тишина") +
-    ", а дома ждут тёплая баня и большой стол.";
-  if (words.length < 2) $("introQuote").innerHTML = esc(V.about1 || DEF.about1);
-  if (V.logo) { $("introLogo").src = V.logo; $("introLogo").hidden = false; }
-  $("introText").textContent = V.about2 || V.about1 || DEF.about2;
-  var col = [gallery[0] || all[1], gallery[3] || gallery[1] || all[2]];
-  $("collage").innerHTML = '<figure class="c1">' + img(col[0]) + '</figure><figure class="c2">' + img(col[1]) + '</figure>' +
-    (V.address_full ? '<div class="badge-loc">📍 ' + esc(V.address_full) + '</div>' : "");
-
-  // дом и баня
-  $("stayList").innerHTML = items.map(function (it, i) {
-    var ph = it.photos && it.photos.length ? it.photos : (it.photo ? [it.photo] : []);
+  // карточки дома и бани
+  $("cards").innerHTML = items.map(function (it, i) {
     var feats = (it.desc || "").split(/\s*(?:;|\n|·)\s*/).filter(Boolean);
-    return '<article class="stay" data-i="' + i + '">' +
-      '<div class="slider" data-photos=\'' + esc(JSON.stringify(ph)) + '\'>' +
-        '<div class="slide-main">' + img(ph[0], it.title) + (ph.length > 1 ? '<span class="slide-count">1 / ' + ph.length + '</span>' : "") + '</div>' +
-        (ph.length > 1 ? '<button class="arrow prev" aria-label="Назад">‹</button><button class="arrow next" aria-label="Вперёд">›</button>' : "") +
-        (ph.length > 1 ? '<div class="thumbs">' + ph.slice(0, 5).map(function (p, k) { return '<button class="' + (k ? "" : "on") + '" data-k="' + k + '">' + img(p) + '</button>'; }).join("") + '</div>' : "") +
-      '</div>' +
-      '<div class="stay-body"><p class="eyebrow">' + (i + 1 < 10 ? "0" : "") + (i + 1) + ' · ' + esc(it.cat || name) + '</p>' +
-        '<h3>' + esc(it.title) + '</h3>' +
-        '<div class="price"><b>' + esc(it.price || "по запросу") + '</b>' + (it.price ? "<span>стоимость</span>" : "") + '</div>' +
-        (feats.length ? '<ul class="feats">' + feats.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("") + '</ul>' : "") +
-        '<a class="btn btn-wood" href="#booking" data-book="' + esc(it.title) + '">Забронировать</a></div></article>';
+    return '<div class="card">' +
+      '<div class="card-photo" data-gal="' + i + '">' + img(it.photos[0], it.title) + (it.photos.length > 1 ? '<span class="n">' + it.photos.length + ' фото</span>' : "") + '</div>' +
+      '<div class="card-body"><h3>' + esc(it.title) + '</h3>' +
+      '<div class="card-price">' + (it.price ? esc(it.price) : '<small>Цена по запросу</small>') + '</div>' +
+      (feats.length ? '<ul>' + feats.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join("") + '</ul>' : '<div style="height:20px"></div>') +
+      '<div class="card-btns"><button class="btn btn-line" data-gal="' + i + '">Фото</button><a class="btn" href="#book" data-book="' + esc(it.title) + '">Забронировать</a></div>' +
+      '</div></div>';
   }).join("");
 
-  // преимущества
-  var I = {
-    fire: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M24 6c2 7 10 10 10 20a10 10 0 0 1-20 0c0-5 3-8 5-10 0 4 2 6 4 6-2-6 1-11 1-16z"/><path d="M10 42h28"/></svg>',
-    pine: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5l-9 12h5l-8 11h6l-8 10h28l-8-10h6l-8-11h5z"/><path d="M24 38v6"/></svg>',
-    table: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><ellipse cx="24" cy="20" rx="16" ry="6"/><path d="M12 24l-3 16M36 24l3 16M24 26v14"/></svg>',
-    bed: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 36V14M42 36V26a6 6 0 0 0-6-6H20v10M6 30h36"/><circle cx="13" cy="24" r="3.5"/></svg>'
-  };
-  var perks = [
-    [I.fire, "Баня на дровах", "Настоящий пар, душ и комната отдыха с чаем после парилки."],
-    [I.pine, "Сосновый лес", "Тишина, чистый воздух и горы вокруг — без городского шума."],
-    [I.table, "Стол на всю компанию", "Кухня со всем необходимым и большой обеденный стол."],
-    [I.bed, "Уютно, как дома", "Тёплые спальни, свежее бельё и полотенца — берите только себя."]
-  ];
-  $("perkGrid").innerHTML = perks.map(function (p) { return '<div class="perk">' + p[0] + '<h4>' + p[1] + '</h4><p>' + p[2] + '</p></div>'; }).join("");
+  // о нас
+  var about = [V.about1, V.about2, V.about3].filter(Boolean);
+  $("aboutText").innerHTML = about.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("");
+  $("aboutPhoto").innerHTML = img(gallery[0] || (items[0] && items[0].photos[1]), name);
 
-  // галерея: общие фото, а если их мало — фото дома и бани
-  var gal = gallery.length >= 4 ? gallery : gallery.concat(all.filter(function (p) { return gallery.indexOf(p) < 0; }));
-  gal = gal.slice(0, 12);
-  $("gGrid").innerHTML = gal.map(function (p) { return '<figure>' + img(p) + '</figure>'; }).join("");
-  $("gGrid").className = "g-grid " + (gal.length >= 6 ? "many" : "n" + gal.length);
+  // удобства
+  var I = {
+    fire: '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 5c2 6 8 8 8 16a8 8 0 0 1-16 0c0-4 2-6 4-8 0 3 1 5 3 5-1-5 1-9 1-13z"/></svg>',
+    tree: '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M20 4l-8 10h4l-7 10h5l-7 9h26l-7-9h5l-7-10h4z"/><path d="M20 33v4"/></svg>',
+    table: '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 15h30M9 15l-2 18M31 15l2 18M14 15v8h12v-8"/></svg>',
+    bed: '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 31V11M35 31v-8a5 5 0 0 0-5-5H17v8M5 26h30"/><circle cx="11" cy="21" r="3"/></svg>'
+  };
+  $("perks").innerHTML = [
+    [I.fire, "Баня на дровах", "Парная, душ и комната отдыха с чаем"],
+    [I.tree, "Сосновый лес", "Тишина и свежий воздух вдали от города"],
+    [I.table, "Большая компания", "Кухня с посудой и большой обеденный стол"],
+    [I.bed, "Всё для ночёвки", "Спальни, постельное бельё и полотенца"]
+  ].map(function (p) { return '<div class="perk">' + p[0] + '<b>' + p[1] + '</b><p>' + p[2] + '</p></div>'; }).join("");
+
+  // галерея
+  var all = [];
+  gallery.forEach(function (p) { all.push(p); });
+  items.forEach(function (it) { it.photos.forEach(function (p) { if (all.indexOf(p) < 0) all.push(p); }); });
+  var gal = all.slice(0, 8);
+  $("gGrid").innerHTML = gal.map(function (p, i) { return '<figure data-all="' + i + '">' + img(p) + '</figure>'; }).join("");
   if (!gal.length) $("gallery").style.display = "none";
 
   // бронирование и контакты
-  $("bookBg").innerHTML = heroPhoto ? img(gallery[1] || heroPhoto) : "";
-  $("bookWhat").innerHTML = items.map(function (it) { return "<option>" + esc(it.title) + "</option>"; }).join("") + (items.length > 1 ? "<option>" + esc(items.map(function (i) { return i.title.split(" ")[0]; }).join(" + ")) + "</option>" : "");
-  var cards = [];
-  if (V.address_full) cards.push('<div class="c-card"><span>Адрес</span><b>' + esc(V.address_full) + '</b></div>');
-  if (V.phone && V.phone !== "+7 (900) 000-00-00") cards.push('<div class="c-card"><span>Телефон</span><b><a href="tel:' + esc(V.phone_href) + '">' + esc(V.phone) + '</a></b></div>');
-  if (V.vk) cards.push('<div class="c-card"><span>ВКонтакте</span><b><a href="' + esc(V.vk) + '" target="_blank">' + esc(V.vk_short || "Написать нам") + '</a></b></div>');
-  if (V.hours) cards.push('<div class="c-card"><span>Заезд и выезд</span><b>' + esc(V.hours) + '</b></div>');
-  cards.push('<div class="c-card"><span>Бронирование</span><b><a href="#booking">Оставить заявку →</a></b></div>');
-  $("cGrid").innerHTML = cards.join("");
-  $("footNote").textContent = "© " + (V.year || new Date().getFullYear()) + " " + name + (tagline ? " · " + tagline.replace(/\s*\|\s*/g, " · ") : "");
+  $("what").innerHTML = titles.map(function (t) { return "<option>" + esc(t) + "</option>"; }).join("") + (titles.length > 1 ? "<option>Всё вместе</option>" : "");
+  var bc = [];
+  if (phone) bc.push('<a href="tel:' + esc(V.phone_href) + '">' + esc(phone) + '</a>');
+  if (V.vk) bc.push('<a href="' + esc(V.vk) + '" target="_blank">ВКонтакте: ' + esc(V.vk_short || V.vk) + '</a>');
+  $("bookContacts").innerHTML = bc.join("");
+  var cc = [];
+  if (V.address_full) cc.push('<div><span>Адрес</span><b>' + esc(V.address_full) + '</b></div>');
+  if (phone) cc.push('<div><span>Телефон</span><b><a href="tel:' + esc(V.phone_href) + '">' + esc(phone) + '</a></b></div>');
+  if (V.vk) cc.push('<div><span>ВКонтакте</span><b><a href="' + esc(V.vk) + '" target="_blank">' + esc(V.vk_short || V.vk) + '</a></b></div>');
+  if (V.hours) cc.push('<div><span>Режим работы</span><b>' + esc(V.hours) + '</b></div>');
+  $("contactsIn").innerHTML = cc.join("");
+  if (!cc.length) $("contacts").style.display = "none";
+  $("footL").textContent = "© " + (V.year || new Date().getFullYear()) + " " + name;
+  $("footR").textContent = V.address_full || "";
 
-  // поведение
-  var header = $("header");
-  function onScroll() { header.classList.toggle("solid", scrollY > 60); }
-  addEventListener("scroll", onScroll, {passive: true}); onScroll();
-  document.querySelectorAll(".slider").forEach(function (s) {
-    var ph = JSON.parse(s.getAttribute("data-photos") || "[]"), k = 0;
-    function go(n) {
-      if (!ph.length) return;
-      k = (n + ph.length) % ph.length;
-      s.querySelector(".slide-main img").src = ph[k];
-      var c = s.querySelector(".slide-count"); if (c) c.textContent = (k + 1) + " / " + ph.length;
-      s.querySelectorAll(".thumbs button").forEach(function (b) { b.classList.toggle("on", +b.dataset.k === k); });
-    }
-    s.addEventListener("click", function (e) {
-      if (e.target.closest(".prev")) return go(k - 1);
-      if (e.target.closest(".next")) return go(k + 1);
-      var t = e.target.closest(".thumbs button"); if (t) return go(+t.dataset.k);
-    });
-  });
-  var lb = $("lb");
+  // просмотр фото
+  var modal = $("modal"), list = [], k = 0;
+  function open(arr, i, cap) { list = arr; k = i; modal.querySelector(".cap").textContent = cap || ""; draw(); modal.classList.add("on"); }
+  function draw() { modal.querySelector("img").src = list[k]; modal.querySelector(".cap").dataset.n = (k + 1) + " / " + list.length; }
   document.addEventListener("click", function (e) {
-    var f = e.target.closest(".g-grid figure, .collage figure, .slide-main");
-    if (f && f.querySelector("img")) { lb.querySelector("img").src = f.querySelector("img").src; lb.classList.add("on"); }
-    if (e.target === lb || e.target.closest(".lb button")) lb.classList.remove("on");
+    var g = e.target.closest("[data-gal]");
+    if (g) { var it = items[+g.dataset.gal]; if (it.photos.length) open(it.photos, 0, it.title); return; }
+    var a = e.target.closest("[data-all]");
+    if (a) { open(gal, +a.dataset.all, "Галерея"); return; }
     var b = e.target.closest("[data-book]");
-    if (b) { var sel = $("bookWhat"); [].forEach.call(sel.options, function (o, i) { if (o.text === b.dataset.book) sel.selectedIndex = i; }); }
+    if (b) { [].forEach.call($("what").options, function (o, i) { if (o.text === b.dataset.book) $("what").selectedIndex = i; }); }
+    if (e.target.closest(".modal .x") || e.target === modal) modal.classList.remove("on");
+    if (e.target.closest(".modal .pv")) { k = (k - 1 + list.length) % list.length; draw(); }
+    if (e.target.closest(".modal .nx")) { k = (k + 1) % list.length; draw(); }
   });
-  $("bookForm").addEventListener("submit", function () { $("bookOk").style.display = "block"; });
+  $("form").addEventListener("submit", function () { $("ok").style.display = "block"; });
 });
 </script>
 </body>
