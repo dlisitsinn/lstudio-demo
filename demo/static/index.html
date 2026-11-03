@@ -86,6 +86,7 @@ table.items input{padding:7px 8px;font-size:14px}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 @media(max-width:1100px){.cols{grid-template-columns:1fr}.result{position:static}}
 @media(max-width:760px){.app{grid-template-columns:1fr}aside{border-right:0;border-bottom:1px solid var(--line)}main{padding:18px 16px 60px}.grid2{grid-template-columns:1fr}}
+.pasting.ph{outline:2px dashed var(--accent);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -127,13 +128,13 @@ table.items input{padding:7px 8px;font-size:14px}
             <label class="f">Часы работы<input type="text" id="f_hours" placeholder="ежедневно 10:00–20:00"></label>
             <label class="f wide">О компании (необязательно)<textarea id="f_about" placeholder="Пара предложений о компании. Пустая строка — новый абзац."></textarea></label>
             <div class="f wide">Логотип (необязательно)
-              <div class="row"><div class="ph" id="logoPh" title="Загрузить логотип">+</div><span class="hint" id="logoHint">нажмите на квадрат, чтобы загрузить</span></div></div>
+              <div class="row"><div class="ph" id="logoPh" title="Загрузить логотип">+</div><span class="hint" id="logoHint">нажмите на квадрат или наведите на него и нажмите Ctrl+V</span></div></div>
           </div>
         </div>
 
         <div class="card">
           <h2><span class="n">3</span>Фото</h2>
-          <div class="drop" id="drop"><b>Перетащите фото сюда</b>или нажмите, чтобы выбрать. Первое фото — на главный экран, порядок можно менять перетаскиванием.</div>
+          <div class="drop" id="drop"><b>Перетащите фото сюда</b>или нажмите, чтобы выбрать, или скопируйте фото и нажмите <b style="display:inline">Ctrl+V</b>. Первое фото — на главный экран, порядок можно менять перетаскиванием.</div>
           <input type="file" id="fileIn" accept="image/*" multiple hidden>
           <div class="thumbs" id="thumbs"></div>
         </div>
@@ -144,7 +145,7 @@ table.items input{padding:7px 8px;font-size:14px}
           <div class="row" style="margin-top:10px">
             <button class="btn small" id="addRow">+ Строка</button>
             <button class="btn small" id="pasteBtn">Вставить списком</button>
-            <span class="hint">Фото к позиции — перетащите на квадратик слева.</span>
+            <span class="hint">Фото к позиции — перетащите на квадратик слева или наведите на него мышку и нажмите Ctrl+V.</span>
           </div>
           <div class="paste" id="paste">
             <textarea id="pasteText" placeholder="# Ногти&#10;Маникюр с покрытием — 1500&#10;Педикюр — от 2000 | с покрытием&#10;# Брови&#10;Коррекция бровей 600"></textarea>
@@ -224,7 +225,8 @@ async function uploadFiles(files){
   for (const f of files){
     if (!f.type.startsWith("image/")) continue;
     const data = await readFile(f);
-    const r = await api("/api/upload", {job, name:f.name, data});
+    const name = f.name || ("paste." + (f.type.split("/")[1] || "png").replace("jpeg", "jpg"));
+    const r = await api("/api/upload", {job, name, data});
     out.push(r.url);
   }
   return out;
@@ -259,6 +261,37 @@ $("#thumbs").addEventListener("drop", e => {
   const to = +t.dataset.i; const [m] = photos.splice(dragI, 1); photos.splice(to, 0, m);
   dragI = null; renderThumbs(); save();
 });
+
+
+// ---------- вставка фото через Ctrl+V ----------
+// Куда вставлять: квадратик позиции или логотип под мышкой, иначе — в общий блок «Фото».
+let hoverTarget = null;
+document.addEventListener("mouseover", e => {
+  const t = e.target.closest("[data-ph], #logoPh, #drop");
+  if (t !== hoverTarget){
+    if (hoverTarget) hoverTarget.classList.remove("pasting");
+    hoverTarget = t;
+    if (t) t.classList.add("pasting");
+  }
+});
+document.addEventListener("paste", async e => {
+  const cd = e.clipboardData; if (!cd) return;
+  let files = [...(cd.files || [])].filter(f => f.type.startsWith("image/"));
+  if (!files.length) files = [...(cd.items || [])].filter(i => i.kind === "file" && i.type.startsWith("image/")).map(i => i.getAsFile()).filter(Boolean);
+  if (!files.length) return;               // обычный текст — вставляется как обычно
+  e.preventDefault();
+  const t = hoverTarget;
+  try {
+    if (t && t.id === "logoPh"){ const [u] = await uploadFiles(files.slice(0, 1)); if (u){ logo = u; renderLogo(); save(); } }
+    else if (t && t.dataset.ph !== undefined){ addItemPhotos(+t.dataset.ph, await uploadFiles(files)); }
+    else { await addPhotos(files); flash("Фото вставлено"); }
+  } catch(err){ alert(err.message); }
+});
+function flash(text){
+  const d = document.createElement("div"); d.textContent = text;
+  d.style.cssText = "position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#111;color:#fff;padding:8px 14px;border-radius:8px;font-size:14px;z-index:99";
+  document.body.appendChild(d); setTimeout(() => d.remove(), 1400);
+}
 
 // ---------- услуги ----------
 function renderItems(){
@@ -306,7 +339,7 @@ function addItemPhotos(i, urls){        // несколько фото у одн
 }
 function renderLogo(){
   $("#logoPh").innerHTML = logo ? `<img src="${esc(logo)}" alt="">` : "+";
-  $("#logoHint").textContent = logo ? "нажмите, чтобы убрать" : "нажмите на квадрат, чтобы загрузить";
+  $("#logoHint").textContent = logo ? "нажмите, чтобы убрать" : "нажмите на квадрат или наведите на него и нажмите Ctrl+V";
 }
 $("#logoPh").onclick = async () => {
   if (logo){ logo = ""; renderLogo(); save(); return; }
