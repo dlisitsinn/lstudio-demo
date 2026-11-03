@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --text:#222; --muted:#6b6b6b; --line:#e4e1dc; --bg:#fff; --bg2:#f5f3ef;
+  --text:#222; --muted:#6b6b6b; --line:#e6dfd3; --bg:#faf6ef; --bg2:#f1eadf;
   --accent:#8b5e34; --accent-d:#714a27; --dark:#1e1e1e;
   --head:'Montserrat',Arial,sans-serif; --body:'Open Sans',Arial,sans-serif;
 }
@@ -135,9 +135,11 @@ section{padding:80px 0}
 /* декор: веточки, веник, дерево */
 #houses,#about,#gallery,#book{overflow:hidden}
 section{position:relative}
-.deco{position:absolute;pointer-events:none;user-select:none;z-index:0;filter:drop-shadow(0 6px 10px rgba(0,0,0,.12))}
+.deco{position:absolute;pointer-events:none;user-select:none;z-index:0;opacity:.8;filter:saturate(.45) sepia(.18) brightness(1.03) drop-shadow(0 6px 10px rgba(0,0,0,.08))}
 section > .wrap{position:relative;z-index:1}
-.wood{background:linear-gradient(rgba(247,243,236,.84),rgba(247,243,236,.84)),url(decor/wood.jpg) center/900px auto repeat}
+body{background:linear-gradient(rgba(250,246,239,.93),rgba(250,246,239,.93)),url(decor/wood.jpg) center top/900px auto repeat}
+.top{background:rgba(250,246,239,.97)}
+.wood{background:linear-gradient(rgba(241,234,223,.82),rgba(241,234,223,.82)),url(decor/wood.jpg) center/900px auto repeat}
 .d-houses{width:420px;right:-110px;top:34px;transform:rotate(-8deg)}
 .d-about{width:230px;right:-30px;top:-60px;transform:rotate(8deg)}
 .d-gallery{width:300px;left:-60px;top:6px;transform:scaleX(-1) rotate(-4deg)}
