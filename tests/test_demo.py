@@ -149,6 +149,7 @@ class FakeVK:
 def test_vk_fetch():
     assert vkdata.screen_from_url("https://vk.com/roza?w=wall") == "roza"
     assert vkdata.screen_from_url("vk.ru/club123") == "club123"
+    assert vkdata.screen_from_url("https://vk.ru/lesnaya.zavod") == "lesnaya.zavod"
     with pytest.raises(vkdata.VKError):
         vkdata.screen_from_url("https://example.com/a b")
     d = vkdata.fetch("vk.com/roza", FakeVK())

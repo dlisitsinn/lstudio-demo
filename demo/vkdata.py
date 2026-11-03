@@ -20,8 +20,8 @@ def screen_from_url(url: str) -> str:
     """vk.com/salon_roza, https://vk.ru/club123, public123, @salon → salon_roza / club123 / public123."""
     s = (url or "").strip()
     s = re.sub(r"^https?://", "", s)
-    s = re.sub(r"^(www\.)?(m\.)?(vk\.com|vk\.ru|vkontakte\.ru)/", "", s)
-    if re.match(r"^[\w-]+\.[a-z]{2,}(/|$)", s):      # ссылка на другой сайт
+    s, is_vk = re.subn(r"^(www\.)?(m\.)?(vk\.com|vk\.ru|vkontakte\.ru)/", "", s)
+    if not is_vk and re.match(r"^[\w-]+\.[a-z]{2,}(/|$)", s):      # ссылка на другой сайт
         raise VKError("Это не ссылка на ВКонтакте")
     s = s.lstrip("@").split("?")[0].split("#")[0].strip("/")
     s = s.split("/")[0]
