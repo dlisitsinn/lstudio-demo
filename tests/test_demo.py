@@ -69,7 +69,7 @@ def test_guess_template():
 
 def test_templates_valid():
     for t in builder.list_templates():
-        assert t["repo"].startswith("dlisitsinn/") and t["ops"], t["id"]
+        assert (t.get("repo", "").startswith("dlisitsinn/") and t["ops"]) or (builder.BASE / t["local"]).is_dir(), t["id"]
         for op in t["ops"]:
             assert isinstance(op, dict)
 
@@ -98,7 +98,7 @@ def test_build_copies_photos_and_strips_metrika(tmp_dirs):
     assert 'noindex' in html and "demo/apply.js" in html and "<title>Роза" in html
     demo = json.loads((out / "demo" / "data.js").read_text(encoding="utf-8").split("=", 1)[1].rstrip(";\n"))
     assert demo["items"] == [{"title": "Маникюр", "price": "1 500 ₽", "price_num": "1 500", "desc": "", "cat": "",
-                              "photo": "demo/photos/p01.png"}]
+                              "photo": "demo/photos/p01.png", "photos": ["demo/photos/p01.png"]}]
     assert demo["gallery"] == ["demo/photos/p02.png"]          # чужой путь не скопирован
     assert demo["photos"]["hero"] == "demo/photos/p02.png"
     assert (out / "demo" / "photos" / "p02.png").exists()

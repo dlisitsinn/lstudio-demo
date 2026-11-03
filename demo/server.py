@@ -199,7 +199,7 @@ def make_handler(app: App):
             if path.startswith("/sites/"):
                 return self._file(builder.SITES, path[len("/sites/"):])
             if path == "/api/templates":
-                return self._json([{"id": t["id"], "title": t.get("title_ui", t["id"]), "repo": t["repo"]}
+                return self._json([{"id": t["id"], "title": t.get("title_ui", t["id"]), "repo": t.get("repo") or t.get("local", "")}
                                    for t in builder.list_templates()])
             if path == "/api/history":
                 return self._json(builder.history())

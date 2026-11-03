@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 SHOT_CSS = """
+html{scroll-behavior:auto!important}
 *,*::before,*::after{animation-delay:0s!important;animation-duration:0s!important;transition:none!important;caret-color:transparent!important}
 .reveal,[class*="reveal"],[data-aos],.fade-up,.fade-in{opacity:1!important;transform:none!important;visibility:visible!important}
 """

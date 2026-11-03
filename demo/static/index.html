@@ -126,6 +126,8 @@ table.items input{padding:7px 8px;font-size:14px}
             <label class="f">Адрес<input type="text" id="f_address" placeholder="ул. Ленина, 5"></label>
             <label class="f">Часы работы<input type="text" id="f_hours" placeholder="ежедневно 10:00–20:00"></label>
             <label class="f wide">О компании (необязательно)<textarea id="f_about" placeholder="Пара предложений о компании. Пустая строка — новый абзац."></textarea></label>
+            <div class="f wide">Логотип (необязательно)
+              <div class="row"><div class="ph" id="logoPh" title="Загрузить логотип">+</div><span class="hint" id="logoHint">нажмите на квадрат, чтобы загрузить</span></div></div>
           </div>
         </div>
 
@@ -165,7 +167,7 @@ table.items input{padding:7px 8px;font-size:14px}
 <script>
 const $ = s => document.querySelector(s);
 const FIELDS = ["name","tagline","phone","city","address","hours","about"];
-let job = "", photos = [], items = [], templates = [], current = null, tab = "pc", userPickedTemplate = false;
+let logo = "", job = "", photos = [], items = [], templates = [], current = null, tab = "pc", userPickedTemplate = false;
 
 async function api(path, body){
   const r = await fetch(path, body === undefined ? {} : {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
@@ -180,6 +182,7 @@ function msg(el, text, kind){ $(el).innerHTML = text ? `<div class="msg ${kind||
 function save(){
   const d = {job, photos, items, template: $("#template").value, picked: userPickedTemplate, vk: $("#vkUrl").value, f:{}};
   FIELDS.forEach(k => d.f[k] = $("#f_"+k).value);
+  d.logo = logo;
   try { localStorage.setItem("lsdemo-draft", JSON.stringify(d)); } catch(e){}
 }
 function load(){
@@ -188,6 +191,7 @@ function load(){
   if (!d) return false;
   job = d.job || ""; photos = d.photos || []; items = d.items || [];
   FIELDS.forEach(k => $("#f_"+k).value = (d.f||{})[k] || "");
+  logo = d.logo || "";
   $("#vkUrl").value = d.vk || "";
   if (d.template) $("#template").value = d.template;
   userPickedTemplate = !!d.picked;
@@ -260,7 +264,7 @@ $("#thumbs").addEventListener("drop", e => {
 function renderItems(){
   if (!items.length) items.push({title:"", price:"", desc:"", cat:"", photo:""});
   $("#items").innerHTML = items.map((it, i) => `<tr data-i="${i}">
-    <td style="width:52px"><div class="ph" data-ph="${i}" title="Фото позиции">${it.photo ? `<img src="${esc(it.photo)}" alt="">` : "+"}</div></td>
+    <td style="width:52px"><div class="ph" data-ph="${i}" title="Фото позиции (можно несколько)" style="position:relative">${it.photo ? `<img src="${esc(it.photo)}" alt="">` : "+"}${(it.photos||[]).length > 1 ? `<span style="position:absolute;right:2px;bottom:2px;background:var(--accent);color:#fff;font-size:10px;padding:0 4px;border-radius:5px">${it.photos.length}</span>` : ""}</div></td>
     <td><input type="text" data-k="title" value="${esc(it.title)}" placeholder="Название"></td>
     <td style="width:110px"><input type="text" data-k="price" value="${esc(it.price)}" placeholder="Цена"></td>
     <td><input type="text" data-k="desc" value="${esc(it.desc)}" placeholder="Описание"></td>
@@ -277,9 +281,9 @@ $("#items").addEventListener("click", e => {
   const ph = e.target.closest("[data-ph]");
   if (ph){
     const i = +ph.dataset.ph;
-    if (items[i].photo && confirm("Убрать фото у этой позиции?")){ items[i].photo = ""; renderItems(); save(); return; }
-    const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*";
-    inp.onchange = async () => { const [u] = await uploadFiles([...inp.files]); if (u){ items[i].photo = u; renderItems(); save(); } };
+    if (items[i].photo && confirm("Убрать фото у этой позиции? (Отмена — добавить ещё фото)")){ items[i].photo = ""; items[i].photos = []; renderItems(); save(); return; }
+    const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; inp.multiple = true;
+    inp.onchange = async () => { addItemPhotos(i, await uploadFiles([...inp.files])); };
     inp.click();
   }
 });
@@ -289,10 +293,27 @@ $("#items").addEventListener("drop", async e => {
   const ph = e.target.closest("[data-ph]"); if (!ph) return;
   e.preventDefault();
   const i = +ph.dataset.ph;
-  if (e.dataTransfer.files.length){ const [u] = await uploadFiles([...e.dataTransfer.files]); if (u) items[i].photo = u; }
+  if (e.dataTransfer.files.length){ addItemPhotos(i, await uploadFiles([...e.dataTransfer.files])); return; }
   else if (dragI !== null){ items[i].photo = photos[dragI]; }    // перетащили фото из блока «Фото»
   renderItems(); save();
 });
+function addItemPhotos(i, urls){        // несколько фото у одной позиции: первое — главное
+  if (!urls.length) return;
+  const it = items[i];
+  it.photos = (it.photos && it.photos.length ? it.photos : (it.photo ? [it.photo] : [])).concat(urls);
+  it.photo = it.photos[0];
+  renderItems(); save();
+}
+function renderLogo(){
+  $("#logoPh").innerHTML = logo ? `<img src="${esc(logo)}" alt="">` : "+";
+  $("#logoHint").textContent = logo ? "нажмите, чтобы убрать" : "нажмите на квадрат, чтобы загрузить";
+}
+$("#logoPh").onclick = async () => {
+  if (logo){ logo = ""; renderLogo(); save(); return; }
+  const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*";
+  inp.onchange = async () => { const [u] = await uploadFiles([...inp.files]); if (u){ logo = u; renderLogo(); save(); } };
+  inp.click();
+};
 $("#addRow").onclick = () => { items.push({title:"", price:"", desc:"", cat:(items[items.length-1]||{}).cat || "", photo:""}); renderItems(); save(); };
 $("#pasteBtn").onclick = () => { $("#paste").classList.add("on"); $("#pasteText").focus(); };
 $("#pasteCancel").onclick = () => $("#paste").classList.remove("on");
@@ -348,6 +369,7 @@ function pollStatus(){
 }
 $("#buildBtn").onclick = async () => {
   const fields = {}; FIELDS.forEach(k => fields[k] = $("#f_"+k).value.trim());
+  fields.logo = logo;
   if (!fields.name) { msg("#buildMsg", "Впишите название компании", "warn"); $("#f_name").focus(); return; }
   msg("#buildMsg", "");
   $("#buildBtn").disabled = true;
@@ -396,6 +418,7 @@ $("#result").addEventListener("click", async e => {
 function editFrom(info){
   FIELDS.forEach(k => $("#f_"+k).value = (info.fields||{})[k] || "");
   photos = (info.photos || []).slice(); items = (info.items || []).map(x => Object.assign({}, x));
+  logo = (info.fields || {}).logo || ""; renderLogo();
   $("#template").value = info.template; userPickedTemplate = true;
   renderThumbs(); renderItems(); save();
   window.scrollTo({top:0, behavior:"smooth"});
@@ -411,7 +434,7 @@ async function loadHistory(){
 $("#hist").addEventListener("click", e => { const b = e.target.closest("[data-h]"); if (b){ current = hist[+b.dataset.h]; tab = "pc"; showResult(); loadHistory(); } });
 $("#newBtn").onclick = () => {
   if (!confirm("Очистить форму и начать новый сайт?")) return;
-  job = ""; photos = []; items = []; userPickedTemplate = false;
+  job = ""; photos = []; items = []; logo = ""; renderLogo(); userPickedTemplate = false;
   FIELDS.forEach(k => $("#f_"+k).value = ""); $("#vkUrl").value = "";
   msg("#vkMsg", ""); msg("#buildMsg", "");
   renderThumbs(); renderItems(); save();
@@ -421,7 +444,7 @@ document.addEventListener("input", e => { if (e.target.id && e.target.id.startsW
 (async () => {
   await loadTemplates();
   load();
-  renderThumbs(); renderItems(); loadHistory(); vkState();
+  renderThumbs(); renderItems(); renderLogo(); loadHistory(); vkState();
 })();
 </script>
 </body>

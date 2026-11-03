@@ -241,9 +241,12 @@ def prepare(fields: dict, items: list, photos: list, tpl: dict, site_dir: Path) 
         if not title:
             continue
         price = format_price(it.get("price"))
+        main = take(it.get("photo"))
+        extra = [p for p in (take(u) for u in it.get("photos") or []) if p and p != main]
         clean.append({"title": title, "price": price, "price_num": price_number(price),
                       "desc": (it.get("desc") or "").strip(), "cat": (it.get("cat") or "").strip(),
-                      "photo": take(it.get("photo"))})
+                      "photo": main or (extra[0] if extra else ""),
+                      "photos": ([main] if main else []) + extra})
     cats, order = {}, []
     for it in clean:
         c = it["cat"] or tpl.get("default_cat", "Услуги")
@@ -258,8 +261,10 @@ def prepare(fields: dict, items: list, photos: list, tpl: dict, site_dir: Path) 
     for i, s in enumerate(slot_names):
         if pool:
             slots[s] = pool[i % len(pool)] if tpl.get("repeat_photos", True) or i < len(pool) else ""
+    v = make_vars(fields, tpl)
+    v["logo"] = take(fields.get("logo") or "")
     return {
-        "v": make_vars(fields, tpl),
+        "v": v,
         "items": clean,
         "cats": [{"name": c, "items": cats[c], "photo": next((i["photo"] for i in cats[c] if i["photo"]), "")}
                  for c in order],
@@ -304,7 +309,10 @@ def patch_html(html: str, title: str) -> str:
 
 def build(template_id: str, fields: dict, items: list, photos: list, force_fetch=False, opener=None) -> dict:
     tpl = get_template(template_id)
-    src = fetch_source(tpl["repo"], tpl.get("branch", "main"), force=force_fetch, opener=opener)
+    if tpl.get("local"):                       # образец лежит прямо в боте (папка samples/…)
+        src = BASE / tpl["local"]
+    else:
+        src = fetch_source(tpl["repo"], tpl.get("branch", "main"), force=force_fetch, opener=opener)
     stamp = datetime.now().strftime("%m%d-%H%M%S")
     slug = f"{slugify(fields.get('name'))}-{template_id}-{stamp}"
     out = SITES / slug
