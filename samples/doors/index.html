@@ -212,7 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
   $("kicker").textContent = name;
   $("h1").innerHTML = "Двери и окна <b>под ключ</b>";
   $("heroP").textContent = V.tagline || V.about1 || "";
-  var heroImg = (doors[0] && doors[0].photo) || (D.photos && D.photos.hero) || "";
+  var heroImg = (D.gallery && D.gallery[0]) || (doors[0] && doors[0].photo) || (D.photos && D.photos.hero) || "";
   $("heroPhoto").innerHTML = img(heroImg, name);
 
   // каталог с вкладками по разделам

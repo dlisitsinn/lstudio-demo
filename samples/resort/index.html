@@ -220,8 +220,9 @@ document.addEventListener("DOMContentLoaded", function () {
   var h1 = titles.length === 2 ? titles[0] + " и " + titles[1].charAt(0).toLowerCase() + titles[1].slice(1) : name;
   $("h1").textContent = h1;
   $("heroText").textContent = tagline ? tagline.split("|").map(function (s) { return s.trim(); }).join(" · ") : (V.about1 || "");
-  var heroPics = [];
-  items.forEach(function (it) { if (it.photos[0]) heroPics.push(it.photos[0]); });
+  // первое фото из блока «Фото» — главное; дальше фото объектов
+  var heroPics = gallery.length ? [gallery[0]] : [];
+  items.forEach(function (it) { if (it.photos[0] && heroPics.indexOf(it.photos[0]) < 0) heroPics.push(it.photos[0]); });
   gallery.forEach(function (g) { if (heroPics.length < 4 && heroPics.indexOf(g) < 0) heroPics.push(g); });
   $("slides").innerHTML = heroPics.map(function (p, i) { return '<div class="hero-slide' + (i ? "" : " on") + '">' + img(p) + '</div>'; }).join("");
   $("dots").innerHTML = heroPics.length > 1 ? heroPics.map(function (p, i) { return '<button class="' + (i ? "" : "on") + '" data-s="' + i + '"></button>'; }).join("") : "";
