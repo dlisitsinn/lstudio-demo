@@ -150,7 +150,7 @@ body{background:linear-gradient(rgba(250,246,239,.93),rgba(250,246,239,.93)),url
 <body>
 <header class="top"><div class="wrap top-in">
   <a class="logo" href="#top" id="logo"></a>
-  <nav class="menu"><a href="#about">О нас</a><a href="#houses">Дом и баня</a><a href="#houses">Цены</a><a href="#gallery">Галерея</a><a href="#contacts">Контакты</a></nav>
+  <nav class="menu"><a href="#about">О нас</a><a href="#houses" id="menuHouses">Дом и баня</a><a href="#houses">Цены</a><a href="#gallery">Галерея</a><a href="#contacts">Контакты</a></nav>
   <div class="top-right" id="topRight"></div>
 </div></header>
 
@@ -229,9 +229,18 @@ document.addEventListener("DOMContentLoaded", function () {
     (V.vk ? '<a class="vk" href="' + esc(V.vk) + '" target="_blank" aria-label="ВКонтакте">' + vkIcon + '</a>' : "") +
     '<a class="btn" href="#book">Бронировать</a>';
 
+  // есть ли баня/сауна — от этого зависят тексты и декор
+  var allText = (items.map(function (it) { return it.title + " " + (it.desc || ""); }).join(" ") + " " + (V.about1 || "")).toLowerCase();
+  var hasBath = /бан[яиюеь]|банн|саун|парн/.test(allText);
+  if (!hasBath) {
+    $("menuHouses").textContent = "Услуги";
+    var vk = document.querySelector(".d-book"); if (vk) vk.remove();
+  }
+  $("housesTitle").textContent = V.houses_title || (hasBath ? "Наши дома и бани" : "Цены и услуги");
+
   // первый экран: заголовок из названий объектов, ниже — слоган
   var titles = items.map(function (it) { return it.title; });
-  var h1 = titles.length === 2 ? titles[0] + " и " + titles[1].charAt(0).toLowerCase() + titles[1].slice(1) : name;
+  var h1 = V.h1 || (titles.length === 2 ? titles[0] + " и " + titles[1].charAt(0).toLowerCase() + titles[1].slice(1) : name);
   $("h1").textContent = h1;
   $("heroText").textContent = tagline ? tagline.split("|").map(function (s) { return s.trim(); }).join(" · ") : (V.about1 || "");
   // главный экран — только общие фото из блока «Фото» (первое — главное); если их нет — фото объектов
@@ -275,12 +284,18 @@ document.addEventListener("DOMContentLoaded", function () {
     table: '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 15h30M9 15l-2 18M31 15l2 18M14 15v8h12v-8"/></svg>',
     bed: '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 31V11M35 31v-8a5 5 0 0 0-5-5H17v8M5 26h30"/><circle cx="11" cy="21" r="3"/></svg>'
   };
-  $("perks").innerHTML = [
-    [I.fire, "Баня на дровах", "Парная, душ и комната отдыха с чаем"],
+  // свои удобства: поле perks, строки «Заголовок — пояснение» (иконки по порядку)
+  var icons = [I.fire, I.tree, I.table, I.bed];
+  var perks = V.perks ? V.perks.split(/\n|;/).map(function (l, i) {
+    var p = l.split(/\s+[—–-]\s+/); return [icons[i % 4], p[0].trim(), (p[1] || "").trim()];
+  }).filter(function (p) { return p[1]; }).slice(0, 4) : [
+    hasBath ? [I.fire, "Баня на дровах", "Парная, душ и комната отдыха с чаем"]
+            : [I.fire, "Зона для шашлыка", "Мангальная зона на территории"],
     [I.tree, "Сосновый лес", "Тишина и свежий воздух вдали от города"],
     [I.table, "Большая компания", "Кухня с посудой и большой обеденный стол"],
     [I.bed, "Всё для ночёвки", "Спальни, постельное бельё и полотенца"]
-  ].map(function (p) { return '<div class="perk">' + p[0] + '<b>' + p[1] + '</b><p>' + p[2] + '</p></div>'; }).join("");
+  ];
+  $("perks").innerHTML = perks.map(function (p) { return '<div class="perk">' + p[0] + '<b>' + p[1] + '</b><p>' + p[2] + '</p></div>'; }).join("");
 
   // галерея
   var all = [];
@@ -291,7 +306,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (!gal.length) $("gallery").style.display = "none";
 
   // бронирование и контакты
-  $("what").innerHTML = titles.map(function (t) { return "<option>" + esc(t) + "</option>"; }).join("") + (titles.length > 1 ? "<option>Всё вместе</option>" : "");
+  $("what").innerHTML = titles.map(function (t) { return "<option>" + esc(t) + "</option>"; }).join("") + (titles.length > 1 && titles.length < 4 ? "<option>Всё вместе</option>" : "");
   var bc = [];
   if (phone) bc.push('<a href="tel:' + esc(V.phone_href) + '">' + esc(phone) + '</a>');
   if (V.vk) bc.push('<a href="' + esc(V.vk) + '" target="_blank">ВКонтакте: ' + esc(V.vk_short || V.vk) + '</a>');

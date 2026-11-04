@@ -199,6 +199,10 @@ def make_vars(f: dict, tpl: dict) -> dict:
         "about2": about[1] if len(about) > 1 else "",
         "about3": about[2] if len(about) > 2 else "",
     }
+    # дополнительные поля (h1, perks, houses_title …) — как есть, их читают образцы
+    for k, val in f.items():
+        if k not in v and isinstance(val, str) and k not in ("logo",):
+            v[k] = val.strip()
     # пустые поля заполняем текстами шаблона (в них можно писать {name}, {city})
     for k, val in defaults.items():
         if not v.get(k):
