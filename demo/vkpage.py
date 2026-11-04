@@ -52,6 +52,48 @@ JS_IMGS = r"""() => {
   return out;
 }"""
 
+JS_PHOTO_LINKS = r"""() => {
+  const out = [];
+  document.querySelectorAll('a[href*="photo-"]').forEach(a => {
+    const m = (a.getAttribute("href") || "").match(/photo(-\d+_\d+)/);
+    if (m && !out.includes(m[1])) out.push(m[1]);
+  });
+  return out;
+}"""
+
+JS_BIGGEST = r"""() => {
+  let best = "", bw = 0;
+  document.querySelectorAll("img").forEach(i => {
+    const w = i.naturalWidth || 0, u = i.currentSrc || i.src || "";
+    if (w > bw && /userapi\.com|vkuserphoto|\/impg\//.test(u)) { bw = w; best = u; }
+  });
+  return [best, bw];
+}"""
+
+
+def _full_size(page, host, ids, limit, log, budget=90):
+    """Открывает каждое фото в просмотрщике ВК и берёт картинку в полном размере."""
+    out, t0 = [], time.time()
+    for n, pid in enumerate(ids[:limit], 1):
+        if time.time() - t0 > budget:
+            break
+        try:
+            page.goto(f"{host}/photo{pid}", wait_until="domcontentloaded", timeout=20000)
+            u, w = "", 0
+            for _ in range(10):                      # ждём, пока загрузится большая картинка
+                page.wait_for_timeout(300)
+                u, w = page.evaluate(JS_BIGGEST)
+                if w >= 800:
+                    break
+            if u and w >= 500:
+                out.append(u.replace("&amp;", "&"))
+                if n % 5 == 0:
+                    log(f"Фото в хорошем качестве: {len(out)}…")
+        except Exception:
+            continue
+    return out
+
+
 JS_MARKET = r"""() => {
   const priceRe = /^\s*(от\s*)?\d[\d\s\u00a0\u202f.,]*\s*(₽|руб\.?|р\.)\s*$/i;
   const tailRe = /^(.{3,}?)\s+(?:—\s*|-\s*)?((?:от\s*)?\d[\d\s\u00a0\u202f]*\s*(?:₽|руб\.?|р\.))\s*$/i;
@@ -263,7 +305,12 @@ def fetch(url: str, base: Path, log=print, photo_limit=24, menu_url: str = "") -
                     page.goto(f"{host}/photos-{gid}", wait_until="domcontentloaded", timeout=40000)
                     page.wait_for_timeout(2000)
                     page.evaluate(JS_SCROLL, 8)
-                    photos = _clean_photos(page.evaluate(JS_IMGS), photo_limit)
+                    thumbs = _clean_photos(page.evaluate(JS_IMGS), photo_limit)
+                    ids = page.evaluate(JS_PHOTO_LINKS)
+                    log("Беру фото в полном размере…")
+                    photos = _full_size(page, host, ids, photo_limit, log) if ids else []
+                    if len(photos) < min(4, len(thumbs)):   # не получилось — берём то, что было
+                        photos += [u for u in thumbs if u not in photos][:photo_limit - len(photos)]
                 except Exception as exc:
                     notes.append(f"фото: {exc}")
             if len(photos) < 4:                  # мало фото в альбомах — добавляем с главной страницы

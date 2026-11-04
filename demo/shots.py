@@ -11,7 +11,7 @@ html{scroll-behavior:auto!important}
 
 MODES = (
     # имя, ширина, высота, масштаб, телефон, высота куска «всей страницы»
-    ("pc", 1440, 900, 1, False, 2700),
+    ("pc", 1440, 900, 2, False, 2700),
 )
 
 
@@ -107,7 +107,7 @@ def shoot(url: str, out_dir: Path, tpl: dict, log=print, max_parts=8) -> list:
                     if n > max_parts:
                         break
                     fname = f"{name}-2-page-{n:02d}.jpg"
-                    page.screenshot(path=str(out_dir / fname), full_page=True, type="jpeg", quality=85,
+                    page.screenshot(path=str(out_dir / fname), full_page=True, type="jpeg", quality=90,
                                     clip={"x": 0, "y": top, "width": w, "height": min(part, total - top)})
                     files.append(fname)
                 ctx.close()

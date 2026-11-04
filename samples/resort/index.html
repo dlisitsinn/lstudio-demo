@@ -234,9 +234,9 @@ document.addEventListener("DOMContentLoaded", function () {
   var h1 = titles.length === 2 ? titles[0] + " и " + titles[1].charAt(0).toLowerCase() + titles[1].slice(1) : name;
   $("h1").textContent = h1;
   $("heroText").textContent = tagline ? tagline.split("|").map(function (s) { return s.trim(); }).join(" · ") : (V.about1 || "");
-  // первое фото из блока «Фото» — главное; дальше фото объектов
-  var heroPics = gallery.length ? [gallery[0]] : [];
-  items.forEach(function (it) { if (it.photos[0] && heroPics.indexOf(it.photos[0]) < 0) heroPics.push(it.photos[0]); });
+  // главный экран — только общие фото из блока «Фото» (первое — главное); если их нет — фото объектов
+  var heroPics = gallery.slice(0, 4);
+  if (!heroPics.length) items.forEach(function (it) { if (it.photos[0]) heroPics.push(it.photos[0]); });
   gallery.forEach(function (g) { if (heroPics.length < 4 && heroPics.indexOf(g) < 0) heroPics.push(g); });
   $("slides").innerHTML = heroPics.map(function (p, i) { return '<div class="hero-slide' + (i ? "" : " on") + '">' + img(p) + '</div>'; }).join("");
   $("dots").innerHTML = heroPics.length > 1 ? heroPics.map(function (p, i) { return '<button class="' + (i ? "" : "on") + '" data-s="' + i + '"></button>'; }).join("") : "";
@@ -266,7 +266,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // о нас
   var about = [V.about1, V.about2, V.about3].filter(Boolean);
   $("aboutText").innerHTML = about.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("");
-  $("aboutPhoto").innerHTML = img(gallery[0] || (items[0] && items[0].photos[1]), name);
+  $("aboutPhoto").innerHTML = img(gallery[1] || gallery[0] || (items[0] && items[0].photos[1]), name);
 
   // удобства
   var I = {
