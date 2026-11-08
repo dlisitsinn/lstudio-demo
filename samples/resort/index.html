@@ -232,8 +232,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // есть ли баня/сауна — от этого зависят тексты и декор
   var allText = (items.map(function (it) { return it.title + " " + (it.desc || ""); }).join(" ") + " " + (V.about1 || "")).toLowerCase();
   var hasBath = /бан[яиюеь]|банн|саун|парн/.test(allText);
+  if (V.menu_houses) $("menuHouses").textContent = V.menu_houses;
   if (!hasBath) {
-    $("menuHouses").textContent = "Услуги";
+    if (!V.menu_houses) $("menuHouses").textContent = "Услуги";
     var vk = document.querySelector(".d-book"); if (vk) vk.remove();
   }
   $("housesTitle").textContent = V.houses_title || (hasBath ? "Наши дома и бани" : "Цены и услуги");
