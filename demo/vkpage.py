@@ -141,6 +141,27 @@ def _logged_in(ctx) -> bool:
         return False
 
 
+JS_LOGIN_FORM = r"""() => {
+  const vis = el => !!(el && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
+  return [...document.querySelectorAll('input[type="password"], input[name="login"]')].some(vis);
+}"""
+
+
+def _page_logged_in(ctx, page) -> bool:
+    """Вошли по-настоящему: есть куки И на странице не форма входа (после смены пароля старые куки остаются)."""
+    if not _logged_in(ctx):
+        return False
+    try:
+        url = page.url or ""
+        if "/login" in url or "id.vk." in url or "oauth.vk" in url:
+            return False
+        if re.match(r"^https?://(m\.)?vk\.(com|ru)/?(\?.*)?$", url):
+            return False                               # корень vk.com — это страница входа
+        return not page.evaluate(JS_LOGIN_FORM)
+    except Exception:
+        return False
+
+
 def _host(ctx) -> str:
     try:
         for c in ctx.cookies():
@@ -182,17 +203,20 @@ def login(base: Path, log=print, timeout=300) -> bool:
         ctx = _launch(pw, profile, headless=False)
         try:
             page = ctx.pages[0] if ctx.pages else ctx.new_page()
-            page.goto("https://vk.com/", wait_until="domcontentloaded")
+            page.goto("https://vk.com/feed", wait_until="domcontentloaded")
+            page.wait_for_timeout(2000)
             log("Войдите во ВК в открывшемся окне Chrome — бот подождёт")
             end = time.time() + timeout
             while time.time() < end:
-                if _logged_in(ctx):
-                    page.wait_for_timeout(1500)
-                    marker(base).write_text("ok")
-                    return True
                 if not ctx.pages:
                     raise ValueError("Окно закрыли до входа во ВК")
-                ctx.pages[0].wait_for_timeout(700)
+                page = ctx.pages[-1]
+                if _page_logged_in(ctx, page):
+                    page.wait_for_timeout(1500)
+                    marker(base).write_text("ok")
+                    log("Вход во ВК выполнен")
+                    return True
+                page.wait_for_timeout(1000)
             raise ValueError("Не дождалась входа во ВК (5 минут). Попробуйте ещё раз")
         finally:
             try:
@@ -289,7 +313,7 @@ def fetch(url: str, base: Path, log=print, photo_limit=24, menu_url: str = "") -
             page.goto(f"{host}/{screen}", wait_until="domcontentloaded", timeout=40000)
             page.wait_for_timeout(2500)
             info = page.evaluate(JS_INFO)
-            if "/login" in page.url or "id.vk." in page.url:
+            if "/login" in page.url or "id.vk." in page.url or page.evaluate(JS_LOGIN_FORM):
                 marker(base).unlink(missing_ok=True)
                 raise VKError("ВК просит войти заново — нажмите «Войти во ВК через Chrome»")
             fields = parse_info(info)
