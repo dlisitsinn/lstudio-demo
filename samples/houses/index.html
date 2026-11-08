@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Загородные дома</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F6F9; --card:#FFFFFF; --ink:#2D3436; --text:#4B5563; --muted:#6B7280; --line:#E5E7EB;
+  --accent:#2F6B4F; --accent-d:#24563F; --accent-soft:#E8F0EB;
+  --head:'Manrope',Arial,sans-serif; --body:'Inter',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 var(--body)}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:var(--head);font-weight:800;line-height:1.12;letter-spacing:-.015em;color:var(--ink)}
+h2{font-size:clamp(28px,3.4vw,40px)}
+.lead{color:var(--text);max-width:620px;margin-top:12px}
+section{padding:88px 0}
+.white{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;border-radius:8px;background:var(--accent);color:#fff;font:600 16px var(--body);border:0;cursor:pointer;transition:background .15s}
+.btn:hover{background:var(--accent-d)}
+.btn:focus-visible,.link:focus-visible,input:focus-visible,select:focus-visible,.tab:focus-visible{outline:3px solid #9CC3AE;outline-offset:2px}
+.btn-line{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn-line:hover{background:var(--accent-soft)}
+.link{color:var(--accent);font-weight:600}
+
+/* шапка */
+.top{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:28px;min-height:72px;flex-wrap:wrap}
+.logo{font:800 21px var(--head);display:flex;align-items:center;gap:10px}
+.logo img{height:44px;width:auto}
+.menu{display:flex;gap:26px;margin-left:auto;font-size:15px;font-weight:500}
+.menu a:hover{color:var(--accent)}
+.top-phone{font-weight:600;font-size:15px;white-space:nowrap}
+
+/* первый экран */
+.hero{padding:80px 0 96px}
+.hero-in{display:flex;flex-wrap:wrap;align-items:center;gap:56px}
+.hero-text{flex:1 1 440px;min-width:0}
+.kicker{font-size:15px;font-weight:600;color:var(--accent);margin-bottom:18px}
+.hero h1{font-size:clamp(36px,4.8vw,58px)}
+.hero p.sub{font-size:19px;color:var(--text);margin-top:22px;max-width:520px}
+.hero-btns{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-top:34px}
+.facts{list-style:none;display:flex;flex-wrap:wrap;gap:28px;margin-top:44px}
+.facts li{flex:1 1 140px}
+.facts b{display:block;font:800 21px var(--head)}
+.facts span{font-size:15px;color:var(--muted)}
+.hero-pic{flex:1 1 440px;min-width:0;position:relative;aspect-ratio:4/3.4;border-radius:14px;overflow:hidden;background:#dfe3e8}
+.hero-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* шаги */
+.steps{list-style:none;display:flex;flex-wrap:wrap;gap:32px;margin-top:44px}
+.steps li{flex:1 1 220px;min-width:0}
+.steps svg{width:32px;height:32px;color:var(--accent)}
+.steps b{display:block;margin-top:14px;font-size:18px}
+.steps p{margin-top:6px;color:var(--text);font-size:15px}
+
+/* удобства */
+.perks{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.perk{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:10px 18px;font-size:15px;font-weight:500}
+.perk svg{width:20px;height:20px;color:var(--accent);flex:none}
+
+/* дома */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}
+.tab{min-height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);font:500 15px var(--body);color:var(--ink);cursor:pointer}
+.tab.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:24px;margin-top:28px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.card[hidden]{display:none}
+.card-pic{position:relative;aspect-ratio:4/3;background:#dfe3e8;cursor:pointer}
+.card-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card-pic .n{position:absolute;right:12px;bottom:12px;background:rgba(17,24,39,.72);color:#fff;font-size:13px;font-weight:600;padding:3px 10px;border-radius:6px}
+.card-body{padding:22px 24px 24px;display:flex;flex-direction:column;flex:1}
+.card-place{font-size:14px;color:var(--muted)}
+.card h3{font-size:20px;margin-top:4px}
+.specs{list-style:none;display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:14px;color:var(--text)}
+.card-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:20px}
+.price{font:800 20px var(--head)}
+.price small{display:block;font:400 13px var(--body);color:var(--muted)}
+
+/* отзывы / правила */
+.split{display:flex;flex-wrap:wrap;gap:48px}
+.split>div{flex:1 1 380px;min-width:0}
+.rating{display:flex;align-items:baseline;gap:12px;margin-top:24px}
+.rating b{font:800 56px var(--head)}
+.rating span{color:var(--muted)}
+.rules{list-style:none;margin-top:24px;border-top:1px solid var(--line)}
+.rules li{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);font-size:16px}
+.rules li span:first-child{color:var(--muted)}
+.rules li span:last-child{font-weight:600;text-align:right}
+
+/* галерея */
+.gal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:36px}
+.gal figure{position:relative;aspect-ratio:1/1;border-radius:10px;overflow:hidden;cursor:pointer;background:#dfe3e8}
+.gal img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* контакты и форма */
+.contact{display:flex;flex-wrap:wrap;gap:56px}
+.contact>div{flex:1 1 360px;min-width:0}
+.cl{margin-top:28px;display:flex;flex-direction:column;gap:18px}
+.cl dt{font-size:14px;color:var(--muted)}
+.cl dd{font-weight:600;margin-top:2px}
+.form{flex:1 1 420px;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:32px;display:flex;flex-direction:column;gap:18px}
+.form label{display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600}
+.form input,.form select{min-height:48px;padding:0 14px;border:1px solid #C9CED8;border-radius:8px;background:#fff;font:400 16px var(--body);color:var(--ink)}
+.form input:focus,.form select:focus{border-color:var(--accent);outline:none}
+.row2{display:flex;flex-wrap:wrap;gap:14px}.row2 label{flex:1 1 160px}
+.form small{font-size:13px;color:var(--muted)}
+.ok{display:none;color:var(--accent);font-weight:600}
+.foot{border-top:1px solid var(--line);padding:28px 0;font-size:14px;color:var(--muted)}
+.foot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+
+/* окно с фото */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(17,24,39,.9);display:none;align-items:center;justify-content:center}
+.modal.on{display:flex}
+.modal img{max-width:88vw;max-height:82vh;border-radius:8px}
+.modal button{position:absolute;background:none;border:0;color:#fff;font-size:40px;cursor:pointer;padding:10px 18px;line-height:1}
+.modal .x{top:16px;right:20px}.modal .pv{left:16px;top:50%;transform:translateY(-50%)}.modal .nx{right:16px;top:50%;transform:translateY(-50%)}
+.modal .cap{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#e5e7eb;font-size:15px}
+.ph{position:absolute;inset:0;background:#dfe3e8}
+
+@media (max-width:760px){
+  section{padding:56px 0}
+  .hero{padding:40px 0 56px}
+  .menu,.top-phone{display:none}
+  .hero-pic{order:-1;aspect-ratio:4/3}
+  .gal{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .btn{min-height:52px}
+  .hero-btns .btn{width:100%}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap top-in">
+  <a class="logo" href="#top" id="logo"></a>
+  <nav class="menu" aria-label="Разделы"><a href="#houses">Дома</a><a href="#about">Удобства</a><a href="#rules">Условия</a><a href="#gallery">Фото</a><a href="#contacts">Контакты</a></nav>
+  <a class="top-phone" id="topPhone" href="#"></a>
+  <a class="btn" href="#contacts">Забронировать</a>
+</div></header>
+
+<section class="hero" id="top"><div class="wrap hero-in">
+  <div class="hero-text">
+    <p class="kicker" id="kicker"></p>
+    <h1 id="h1"></h1>
+    <p class="sub" id="sub"></p>
+    <div class="hero-btns"><a class="btn" href="#houses">Выбрать дом</a><a class="link" href="#rules">Условия бронирования →</a></div>
+    <ul class="facts" id="facts"></ul>
+  </div>
+  <div class="hero-pic" id="heroPic"></div>
+</div></section>
+
+<section class="white" id="how"><div class="wrap">
+  <h2>Как забронировать</h2>
+  <ol class="steps">
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><b>1. Выберите дом</b><p>По размеру, посёлку и удобствам: камин, сауна, чан.</p></li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><b>2. Оставьте заявку</b><p>Укажите даты и число гостей — подтвердим свободные дни.</p></li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20M6 15h4"/></svg><b>3. Внесите предоплату</b><p>Бронь закрепляется за вами после частичной предоплаты.</p></li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/></svg><b>4. Заселяйтесь</b><p>Пришлём адрес, схему проезда и код от дома.</p></li>
+  </ol>
+</div></section>
+
+<section id="about"><div class="wrap">
+  <h2 id="aboutTitle">Всё для спокойного отдыха</h2>
+  <div class="lead" id="aboutText"></div>
+  <div class="perks" id="perks"></div>
+</div></section>
+
+<section class="white" id="houses"><div class="wrap">
+  <h2>Наши дома</h2>
+  <p class="lead" id="housesLead"></p>
+  <div class="tabs" id="tabs" role="tablist" aria-label="Посёлок"></div>
+  <div class="cards" id="cards"></div>
+</div></section>
+
+<section id="rules"><div class="wrap split">
+  <div>
+    <h2>Условия</h2>
+    <ul class="rules" id="rulesList"></ul>
+  </div>
+  <div id="reviewBox">
+    <h2>Отзывы гостей</h2>
+    <div class="rating" id="rating"></div>
+    <p class="lead" id="ratingNote"></p>
+  </div>
+</div></section>
+
+<section class="white" id="gallery"><div class="wrap">
+  <h2>Фото</h2>
+  <div class="gal" id="gal"></div>
+</div></section>
+
+<section id="contacts"><div class="wrap contact">
+  <div>
+    <h2>Забронировать дом</h2>
+    <p class="lead">Оставьте заявку — свяжемся, подтвердим свободные даты и расскажем, как добраться.</p>
+    <dl class="cl" id="cl"></dl>
+  </div>
+  <form class="form" id="form" onsubmit="return false">
+    <label>Дом<select id="what"></select></label>
+    <div class="row2"><label>Заезд<input type="date"></label><label>Выезд<input type="date"></label></div>
+    <div class="row2"><label>Ваше имя<input type="text" autocomplete="name"></label><label>Телефон<input type="tel" autocomplete="tel" placeholder="+7"></label></div>
+    <button class="btn" type="submit">Отправить заявку</button>
+    <p class="ok" id="ok">Спасибо! Мы скоро свяжемся с вами.</p>
+    <small>Нажимая кнопку, вы соглашаетесь с обработкой персональных данных.</small>
+  </form>
+</div></section>
+
+<footer class="foot"><div class="wrap"><span id="footL"></span><span id="footR"></span></div></footer>
+<div class="modal" id="modal"><button class="x" aria-label="Закрыть">×</button><button class="pv" aria-label="Назад">‹</button><img alt=""><button class="nx" aria-label="Вперёд">›</button><div class="cap"></div></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var D = window.__DEMO__ || {}, V = D.v || {};
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]; }); }
+  function img(src, alt) { return src ? '<img src="' + esc(src) + '" alt="' + esc(alt || "") + '">' : '<div class="ph"></div>'; }
+  var name = V.name || "Загородные дома";
+  var items = (D.items && D.items.length) ? D.items : [{title: "Дом у леса", price: "", desc: "60 м²", cat: "", photos: []}];
+  items.forEach(function (it) { it.photos = it.photos && it.photos.length ? it.photos : (it.photo ? [it.photo] : []); });
+  var gallery = (D.gallery || []).slice();
+  var phone = V.phone && V.phone !== "+7 (900) 000-00-00" ? V.phone : "";
+  var lines = function (s) { return (s || "").split(/\n|;/).map(function (x) { return x.trim(); }).filter(Boolean); };
+
+  document.title = name + (V.tagline ? " — " + V.tagline : "");
+  $("logo").innerHTML = V.logo ? img(V.logo, name) : esc(name);
+  if (phone) { $("topPhone").textContent = phone; $("topPhone").href = "tel:" + (V.phone_href || ""); } else $("topPhone").remove();
+
+  // первый экран: текст слева, фото справа
+  $("kicker").textContent = V.kicker || V.city_or_address || "";
+  $("h1").textContent = V.h1 || name;
+  $("sub").textContent = V.tagline || V.about1 || "";
+  $("facts").innerHTML = lines(V.facts).slice(0, 3).map(function (f) {
+    var p = f.split(/\s+[—–-]\s+/); return "<li><b>" + esc(p[0]) + "</b><span>" + esc(p[1] || "") + "</span></li>";
+  }).join("");
+  $("heroPic").innerHTML = img(gallery[0] || (items[0].photos[0]), name);
+
+  // удобства
+  $("aboutText").innerHTML = [V.about1, V.about2].filter(Boolean).map(function (p) { return "<p style='margin-top:12px'>" + esc(p) + "</p>"; }).join("");
+  var tick = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+  $("perks").innerHTML = lines(V.perks).map(function (p) { return '<span class="perk">' + tick + esc(p) + "</span>"; }).join("");
+
+  // дома с фильтром по посёлку
+  var cats = [];
+  items.forEach(function (it) { if (it.cat && cats.indexOf(it.cat) < 0) cats.push(it.cat); });
+  $("housesLead").textContent = items.length + " " + (items.length % 10 === 1 && items.length % 100 !== 11 ? "дом" : (items.length % 10 >= 2 && items.length % 10 <= 4 && (items.length % 100 < 10 || items.length % 100 >= 20) ? "дома" : "домов")) + (cats.length > 1 ? " в " + cats.length + " посёлках. Выберите посёлок или посмотрите все." : ".");
+  $("tabs").innerHTML = cats.length > 1 ? ['<button class="tab on" data-c="" role="tab">Все</button>'].concat(cats.map(function (c) { return '<button class="tab" data-c="' + esc(c) + '" role="tab">' + esc(c) + "</button>"; })).join("") : "";
+  $("cards").innerHTML = items.map(function (it, i) {
+    var specs = lines(it.desc);
+    return '<article class="card" data-c="' + esc(it.cat) + '">' +
+      '<div class="card-pic" data-gal="' + i + '">' + img(it.photos[0], it.title) + (it.photos.length > 1 ? '<span class="n">' + it.photos.length + ' фото</span>' : "") + "</div>" +
+      '<div class="card-body">' + (it.cat ? '<span class="card-place">' + esc(it.cat) + "</span>" : "") + "<h3>" + esc(it.title) + "</h3>" +
+      (specs.length ? '<ul class="specs">' + specs.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ul>" : "") +
+      '<div class="card-foot"><div class="price">' + (it.price ? esc(it.price.split("/")[0].trim()) + (it.price.indexOf("/") > 0 ? "<small>" + esc(it.price.split("/").slice(1).join("/").trim()) + "</small>" : "") : "<small>Цена по запросу</small>") + "</div>" +
+      '<a class="btn btn-line" href="#contacts" data-book="' + esc(it.title) + '">Забронировать</a></div></div></article>';
+  }).join("");
+  $("tabs").addEventListener("click", function (e) {
+    var b = e.target.closest(".tab"); if (!b) return;
+    [].forEach.call(document.querySelectorAll(".tab"), function (t) { t.classList.toggle("on", t === b); });
+    [].forEach.call(document.querySelectorAll(".card"), function (c) { c.hidden = !!b.dataset.c && c.dataset.c !== b.dataset.c; });
+  });
+
+  // условия и отзывы
+  $("rulesList").innerHTML = lines(V.rules).map(function (r) {
+    var p = r.split(/\s+[—–-]\s+/); return "<li><span>" + esc(p[0]) + "</span><span>" + esc(p[1] || "") + "</span></li>";
+  }).join("");
+  if (V.rating) {
+    var rp = V.rating.split(/\s+[—–-]\s+/);
+    $("rating").innerHTML = "<b>" + esc(rp[0]) + "</b><span>" + esc(rp[1] || "") + "</span>";
+    $("ratingNote").innerHTML = V.reviews_url ? '<a class="link" href="' + esc(V.reviews_url) + '" target="_blank" rel="noopener">Читать отзывы →</a>' : "";
+  } else $("reviewBox").remove();
+
+  // галерея
+  var all = gallery.slice();
+  items.forEach(function (it) { it.photos.forEach(function (p) { if (all.indexOf(p) < 0) all.push(p); }); });
+  var gal = all.slice(0, 8);
+  $("gal").innerHTML = gal.map(function (p, i) { return '<figure data-all="' + i + '">' + img(p) + "</figure>"; }).join("");
+
+  // контакты и форма
+  $("what").innerHTML = items.map(function (it) { return "<option>" + esc(it.title) + "</option>"; }).join("");
+  var cl = [];
+  if (phone) cl.push(["Телефон", '<a href="tel:' + esc(V.phone_href) + '">' + esc(phone) + "</a>"]);
+  if (V.whatsapp) cl.push(["WhatsApp", '<a class="link" href="https://wa.me/' + esc(V.whatsapp) + '" target="_blank" rel="noopener">Написать в WhatsApp</a>']);
+  if (V.vk) cl.push(["ВКонтакте", '<a class="link" href="' + esc(V.vk) + '" target="_blank" rel="noopener">' + esc(V.vk_short || V.vk) + "</a>"]);
+  if (V.hours) cl.push(["Принимаем заявки", esc(V.hours)]);
+  if (V.address_full) cl.push(["Где мы", esc(V.address_full)]);
+  $("cl").innerHTML = cl.map(function (c) { return "<div><dt>" + c[0] + "</dt><dd>" + c[1] + "</dd></div>"; }).join("");
+  $("footL").textContent = "© " + (V.year || new Date().getFullYear()) + " " + name;
+  $("footR").textContent = V.address_full || "";
+
+  // просмотр фото
+  var modal = $("modal"), list = [], k = 0;
+  function open(arr, i, cap) { list = arr; k = i; modal.querySelector(".cap").textContent = cap || ""; draw(); modal.classList.add("on"); }
+  function draw() { modal.querySelector("img").src = list[k]; }
+  document.addEventListener("click", function (e) {
+    var g = e.target.closest("[data-gal]");
+    if (g) { var it = items[+g.dataset.gal]; if (it.photos.length) open(it.photos, 0, it.title); return; }
+    var a = e.target.closest("[data-all]");
+    if (a) { open(gal, +a.dataset.all, ""); return; }
+    var b = e.target.closest("[data-book]");
+    if (b) { [].forEach.call($("what").options, function (o, i) { if (o.text === b.dataset.book) $("what").selectedIndex = i; }); }
+    if (e.target.closest(".modal .x") || e.target === modal) modal.classList.remove("on");
+    if (e.target.closest(".modal .pv")) { k = (k - 1 + list.length) % list.length; draw(); }
+    if (e.target.closest(".modal .nx")) { k = (k + 1) % list.length; draw(); }
+  });
+  $("form").addEventListener("submit", function () { $("ok").style.display = "block"; });
+});
+</script>
+</body>
+</html>

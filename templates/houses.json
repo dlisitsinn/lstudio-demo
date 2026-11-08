@@ -1,0 +1,5 @@
+{"title_ui":"Загородные дома — каталог (как elkipalkii)","order":9,"local":"samples/houses",
+ "keywords":[],
+ "title":"{name}","default_cat":"",
+ "defaults":{"tagline":"Дома у леса для отдыха семьёй и компанией"},
+ "slots":["hero"],"ops":[]}
